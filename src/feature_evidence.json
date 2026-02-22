@@ -1,0 +1,325 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-internet-identity-authentication-system-for-all-users-with-mandatory-login-before-accessing-any-platform-features",
+      "featureTitle": "Implement Internet Identity authentication system for all users with mandatory login before accessing any platform features",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AuthGate.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-dual-user-profile-system-human-gig-workers-with-fields-for-name-photo-upload-skills-dropdown-predefined-options-fotografar-locais-entregas-r-pidas-verifica-es-presenciais-ar-captures-plus-custom-text-input-real-time-gps-location-action-radius-in-km-price-per-task-hour-in-euros-availability-calendar-historical-rating-display-and-ipfs-portfolio-links-ai-agent-client-profiles-with-agent-name-description-text-area-and-task-history-table",
+      "featureTitle": "Create dual user profile system: Human gig workers with fields for name, photo upload, skills dropdown (predefined options: 'Fotografar locais', 'Entregas rápidas', 'Verificações presenciais', 'AR captures', plus custom text input), real-time GPS location, action radius in km, price per task/hour in euros, availability calendar, historical rating display, and IPFS portfolio links; AI Agent/Client profiles with agent name, description text area, and task history table",
+      "files": [
+        "frontend/src/components/ProfileSetup.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-human-worker-dashboard-displaying-nearby-available-tasks-with-filters-for-skill-type-location-distance-and-price-range-implement-accept-task-button-that-changes-task-status-to-em-andamento-provide-proof-upload-interface-for-photos-videos-with-gps-timestamp-capture-integrate-ipfs-storage-for-proof-files-with-canister-metadata-storage-trigger-automatic-payment-release-after-validation-approval",
+      "featureTitle": "Build Human Worker Dashboard displaying nearby available tasks with filters for skill type, location/distance, and price range; implement accept task button that changes task status to 'Em andamento'; provide proof upload interface for photos/videos with GPS timestamp capture; integrate IPFS storage for proof files with canister metadata storage; trigger automatic payment release after validation approval",
+      "files": [
+        "frontend/src/pages/WorkerDashboard.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-dual-payment-system-supporting-native-cryptocurrency-icp-ckbtc-cycles-for-instant-on-chain-payments-and-eu-regulated-fiat-euro-payments-through-integrated-ramps-implement-on-ramp-via-moonpay-or-stripe-with-eu-compliant-kyc-for-clients-to-purchase-icp-and-pay-for-tasks-implement-off-ramp-for-human-workers-to-convert-icp-to-euros-deposited-to-portuguese-iban-or-mbway-accounts-display-transparent-fee-breakdowns-for-all-transactions-ensure-canister-only-handles-icp-escrow-without-custodying-fiat-maintain-complete-on-chain-payment-logs-for-compliance-auditing",
+      "featureTitle": "Build dual payment system supporting native cryptocurrency (ICP, ckBTC, cycles) for instant on-chain payments and EU-regulated fiat euro payments through integrated ramps; implement on-ramp via MoonPay or Stripe with EU-compliant KYC for clients to purchase ICP and pay for tasks; implement off-ramp for human workers to convert ICP to euros deposited to Portuguese IBAN or MBWay accounts; display transparent fee breakdowns for all transactions; ensure canister only handles ICP escrow without custodying fiat; maintain complete on-chain payment logs for compliance auditing",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/PaymentFailure.tsx",
+        "frontend/src/pages/PaymentSuccess.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-analytics-dashboard-showing-worker-earnings-over-time-task-completion-statistics-and-geographic-heat-map-of-task-activity-specifically-for-vora-and-lisboa-make-aggregate-platform-usage-metrics-publicly-viewable-on-chain",
+      "featureTitle": "Create analytics dashboard showing worker earnings over time, task completion statistics, and geographic heat map of task activity specifically for Évora and Lisboa; make aggregate platform usage metrics publicly viewable on-chain",
+      "files": [
+        "frontend/src/pages/Analytics.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-gdpr-compliance-features-including-self-service-data-deletion-allowing-users-to-remove-their-personal-information-explicit-consent-checkboxes-during-profile-creation-for-data-processing-data-export-functionality-providing-users-with-all-their-stored-data-in-machine-readable-format-and-privacy-controls-for-profile-visibility",
+      "featureTitle": "Implement GDPR compliance features including self-service data deletion allowing users to remove their personal information, explicit consent checkboxes during profile creation for data processing, data export functionality providing users with all their stored data in machine-readable format, and privacy controls for profile visibility",
+      "files": [
+        "frontend/src/components/GDPRConsent.tsx",
+        "frontend/src/pages/Settings.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-and-display-privacy-policy-and-terms-of-service-documents-in-both-portuguese-and-english-covering-eu-legal-requirements-gdpr-compliance-platform-liability-limitations-and-gig-economy-relationship-disclaimers-provide-links-to-these-documents-in-footer-and-during-registration-include-disclaimer-stating-n-o-emprego-formal-gig-economy-consulte-fiscalista-pt",
+      "featureTitle": "Generate and display Privacy Policy and Terms of Service documents in both Portuguese and English covering EU legal requirements, GDPR compliance, platform liability limitations, and gig economy relationship disclaimers; provide links to these documents in footer and during registration; include disclaimer stating 'Não é emprego formal. Gig economy. Consulte fiscalista PT.'",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Footer.tsx",
+        "frontend/src/pages/PrivacyPolicy.tsx",
+        "frontend/src/pages/TermsOfService.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-13"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-age-verification-gate-requiring-users-to-confirm-they-are-18-years-or-older-through-internet-identity-verification-before-accessing-platform-features-block-access-for-users-who-cannot-verify-age-requirement",
+      "featureTitle": "Implement age verification gate requiring users to confirm they are 18 years or older through Internet Identity verification before accessing platform features; block access for users who cannot verify age requirement",
+      "files": [
+        "frontend/src/components/AgeGate.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-automatic-portuguese-tax-reporting-feature-generating-iva-vat-reports-for-workers-earning-over-10-000-annually-provide-direct-link-to-portuguese-tax-authority-at-portal-for-filing-display-clear-guidance-about-tax-obligations-for-gig-economy-workers-in-portugal",
+      "featureTitle": "Create automatic Portuguese tax reporting feature generating IVA (VAT) reports for workers earning over €10,000 annually; provide direct link to Portuguese Tax Authority (AT) portal for filing; display clear guidance about tax obligations for gig economy workers in Portugal",
+      "files": [
+        "frontend/src/pages/WorkerDashboard.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-15"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-mobile-first-responsive-ui-using-tailwindcss-with-dark-and-light-theme-toggle-implement-language-switcher-for-portuguese-and-english-with-all-interface-text-translated-ensure-optimal-touch-interactions-and-mobile-navigation-patterns-use-react-components-following-project-architecture",
+      "featureTitle": "Build mobile-first responsive UI using TailwindCSS with dark and light theme toggle; implement language switcher for Portuguese and English with all interface text translated; ensure optimal touch interactions and mobile navigation patterns; use React components following project architecture",
+      "files": [
+        "frontend/src/hooks/useTranslation.ts",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-16"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-footer-to-all-pages-containing-copyright-notice-canistertask-2026-herm-nio-coragem-hcoragem-and-legal-text-plataforma-soberana-icp-n-o-custodiamos-fundos-pagamentos-via-ramps-regulados-eu-pt-create-about-page-with-full-creator-attribution-created-by-herm-nio-coragem-hcoragem-from-vora-portugal-and-detailed-explanation-of-platform-s-sovereign-architecture-and-non-custodial-payment-model",
+      "featureTitle": "Add footer to all pages containing copyright notice 'CanisterTask © 2026 Hermínio Coragem (HCoragem)' and legal text 'Plataforma soberana ICP. Não custodiamos fundos. Pagamentos via ramps regulados EU/PT.'; create About page with full creator attribution 'Created by Hermínio Coragem (HCoragem) from Évora, Portugal' and detailed explanation of platform's sovereign architecture and non-custodial payment model",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/About.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-configure-progressive-web-app-with-complete-manifest-json-enabling-installation-as-standalone-mobile-and-web-app-implement-service-worker-for-offline-first-functionality-caching-critical-assets-and-api-responses-set-up-push-notification-system-for-task-updates-messages-and-payment-alerts-ensure-pwa-passes-installability-criteria-for-all-major-browsers",
+      "featureTitle": "Configure Progressive Web App with complete manifest.json enabling installation as standalone mobile and web app; implement service worker for offline-first functionality caching critical assets and API responses; set up push notification system for task updates, messages, and payment alerts; ensure PWA passes installability criteria for all major browsers",
+      "files": [
+        "frontend/public/manifest.json",
+        "frontend/src/main.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-design-a-modern-professional-visual-theme-with-warm-earth-tones-inspired-by-vora-s-historic-architecture-use-typography-that-balances-readability-on-mobile-with-sophisticated-desktop-presentation-create-an-icon-system-that-clearly-communicates-gig-economy-concepts-tasks-workers-verification-payments-ensure-the-design-conveys-trust-sovereignty-and-technological-innovation-without-using-blue-and-purple-color-schemes",
+      "featureTitle": "Design a modern, professional visual theme with warm earth tones inspired by Évora's historic architecture; use typography that balances readability on mobile with sophisticated desktop presentation; create an icon system that clearly communicates gig economy concepts (tasks, workers, verification, payments); ensure the design conveys trust, sovereignty, and technological innovation without using blue and purple color schemes",
+      "files": [
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-render-the-generated-platform-icon-as-a-static-asset-in-frontend-public-assets-generated-and-display-it-as-the-app-icon-in-manifest-json-favicon-and-header-logo",
+      "featureTitle": "Render the generated platform icon as a static asset in frontend/public/assets/generated and display it as the app icon in manifest.json, favicon, and header logo",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Header.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

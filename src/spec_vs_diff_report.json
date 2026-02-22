@@ -1,0 +1,147 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-22T23:27:53.892Z",
+  "summary": "The diff implements foundational infrastructure for CanisterTask including Internet Identity authentication, dual profile system (Human Worker/AI Agent), basic UI scaffolding with routing, theme/language support, GDPR consent components, age verification, footer with required legal text, and Stripe payment integration groundwork. However, many core functional requirements remain unimplemented, including task management, escrow payments, OpenStreetMap integration, WebXR/AR features, NFT badges, real-time messaging, analytics dashboards, tax reporting, PWA configuration, and social sharing.",
+  "missing_requirements": [
+    {
+      "id": "REQ-3",
+      "requirement": "Build Human Worker Dashboard displaying nearby available tasks with filters for skill type, location/distance, and price range; implement accept task button that changes task status to 'Em andamento'; provide proof upload interface for photos/videos with GPS timestamp capture; integrate IPFS storage for proof files with canister metadata storage; trigger automatic payment release after validation approval",
+      "reason": "WorkerDashboard.tsx component exists but its implementation is not shown in the diff. No evidence of task filtering, proof upload interfaces, IPFS integration, or payment release logic in visible backend/frontend code.",
+      "evidence": [
+        "frontend/src/pages/WorkerDashboard.tsx"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "Create public API endpoints for AI agents using HTTPS outcalls: POST /search accepting JSON body with skills array, lat/lon coordinates, raio_km radius, and max_preco price limit returning matching worker profiles as JSON array; POST /hire accepting perfil_id, task_desc, preco, and prazo_min to create on-chain signed contract; GET /status/{task_id} returning real-time task status updates",
+      "reason": "Backend main.mo is truncated and does not show implementation of POST /search, POST /hire, or GET /status/{task_id} API endpoints for external AI agents.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Implement escrow smart contract system where clients deposit ICP or euro-equivalent tokens that lock in contract until proof validation; create validation mechanism with two paths: automatic validation using GPS verification and AI image analysis, or decentralized voting by 3 randomly selected human validators; build dispute resolution system using NNS-style voting for contested tasks",
+      "reason": "No escrow contract logic visible in backend. Data structures exist for tasks and payments, but no escrow locking mechanism, validation paths (GPS/AI or 3-validator voting), or dispute resolution implementation shown.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Build dual payment system supporting native cryptocurrency (ICP, ckBTC, cycles) for instant on-chain payments and EU-regulated fiat euro payments through integrated ramps; implement on-ramp via MoonPay or Stripe with EU-compliant KYC for clients to purchase ICP and pay for tasks; implement off-ramp for human workers to convert ICP to euros deposited to Portuguese IBAN or MBWay accounts; display transparent fee breakdowns for all transactions; ensure canister only handles ICP escrow without custodying fiat; maintain complete on-chain payment logs for compliance auditing",
+      "reason": "Stripe configuration infrastructure exists but no on-ramp/off-ramp implementation visible. No MoonPay integration, no IBAN/MBWay withdrawal logic, no fee breakdown displays, and no complete payment logging shown.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Integrate OpenStreetMap for displaying worker locations and task geography using HTTPS outcalls; implement real-time GPS tracking for workers during active tasks; display interactive map showing available tasks with distance indicators; create heat map visualization for task density in Évora and Lisboa regions",
+      "reason": "No OpenStreetMap integration visible in any frontend or backend files. No map components, no HTTPS outcalls to OSM tile servers, no GPS tracking, no heat map visualizations.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "Implement WebXR integration for AR-based task proofs allowing workers to capture augmented reality evidence for tasks requiring AR captures skill; store AR proof data alongside standard photo/video proofs in IPFS",
+      "reason": "No WebXR code, no AR capture logic, no IPFS integration for AR proof data visible anywhere in the diff.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-9",
+      "requirement": "Create NFT badge system awarding collectible achievement badges to high-performing workers; implement rating system that tracks worker performance across completed tasks; display badges in worker profiles and calculate aggregate ratings visible to potential clients",
+      "reason": "Rating field exists in HumanWorkerProfile but no NFT minting logic, no badge award system, no badge display in profiles, no aggregate rating calculations visible.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "requirement": "Build real-time communication system using canister signals for direct messaging between clients and workers during active tasks; implement notification system for task updates, messages, and payment confirmations",
+      "reason": "No messaging system, no canister signals implementation, no notification infrastructure visible in backend or frontend.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Create analytics dashboard showing worker earnings over time, task completion statistics, and geographic heat map of task activity specifically for Évora and Lisboa; make aggregate platform usage metrics publicly viewable on-chain",
+      "reason": "Analytics.tsx exists but shows only placeholder text. No earnings charts, no task completion statistics, no geographic heat maps, no public metrics implementation.",
+      "evidence": [
+        "frontend/src/pages/Analytics.tsx"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "requirement": "Implement GDPR compliance features including self-service data deletion allowing users to remove their personal information, explicit consent checkboxes during profile creation for data processing, data export functionality providing users with all their stored data in machine-readable format, and privacy controls for profile visibility",
+      "reason": "GDPRConsent component shows consent checkbox but no data deletion functionality, no data export implementation, no privacy visibility controls visible in Settings or backend.",
+      "evidence": [
+        "frontend/src/components/GDPRConsent.tsx",
+        "frontend/src/pages/Settings.tsx"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "requirement": "Create automatic Portuguese tax reporting feature generating IVA (VAT) reports for workers earning over €10,000 annually; provide direct link to Portuguese Tax Authority (AT) portal for filing; display clear guidance about tax obligations for gig economy workers in Portugal",
+      "reason": "No tax tracking logic, no IVA report generation, no AT portal links, no tax guidance visible in any component or backend logic.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-18",
+      "requirement": "Configure Progressive Web App with complete manifest.json enabling installation as standalone mobile and web app; implement service worker for offline-first functionality caching critical assets and API responses; set up push notification system for task updates, messages, and payment alerts; ensure PWA passes installability criteria for all major browsers",
+      "reason": "No manifest.json file, no service worker implementation, no push notification setup visible in the diff.",
+      "evidence": []
+    },
+    {
+      "id": "REQ-19",
+      "requirement": "Implement social sharing functionality with buttons for X (Twitter) and Telegram that share platform content with pre-filled hashtags #CanisterTask and #ICPSoberano; optimize meta tags for SEO with focus keywords 'gig economy ICP' and 'tarefas IA Portugal'; configure custom domain support for canistertask.icp or hcoragem.canistertask.icp addressing",
+      "reason": "Footer.tsx includes share buttons with correct hashtags, but no SEO meta tags implementation visible in HTML head, no custom ICP domain configuration shown.",
+      "evidence": [
+        "frontend/src/components/Footer.tsx"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "requirement": "Render the generated platform icon as a static asset in frontend/public/assets/generated and display it as the app icon in manifest.json, favicon, and header logo",
+      "reason": "Icon referenced in multiple components (AuthGate, Header, Footer) but no manifest.json file exists in diff and no evidence icon file was actually generated or placed in correct directory.",
+      "evidence": [
+        "frontend/src/components/AuthGate.tsx",
+        "frontend/src/components/Header.tsx",
+        "frontend/src/components/Footer.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.85,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/public/manifest.json",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AgeGate.tsx",
+    "frontend/src/components/AuthGate.tsx",
+    "frontend/src/components/Footer.tsx",
+    "frontend/src/components/GDPRConsent.tsx",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/components/ProfileSetup.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useTranslation.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/About.tsx",
+    "frontend/src/pages/Analytics.tsx",
+    "frontend/src/pages/PaymentFailure.tsx",
+    "frontend/src/pages/PaymentSuccess.tsx",
+    "frontend/src/pages/PrivacyPolicy.tsx",
+    "frontend/src/pages/Settings.tsx",
+    "frontend/src/pages/TermsOfService.tsx",
+    "frontend/src/pages/WorkerDashboard.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "kind": "build_request",
+  "title": "Build CanisterTask - Decentralized Gig Economy PWA Platform",
+  "projectName": "CanisterTask",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement Internet Identity authentication system for all users with mandatory login before accessing any platform features",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Internet Identity (ICP) obrigatório para todos"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users cannot access platform without Internet Identity login",
+        "Login state persists across sessions",
+        "Authentication integrates with both human and AI agent profile flows"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create dual user profile system: Human gig workers with fields for name, photo upload, skills dropdown (predefined options: 'Fotografar locais', 'Entregas rápidas', 'Verificações presenciais', 'AR captures', plus custom text input), real-time GPS location, action radius in km, price per task/hour in euros, availability calendar, historical rating display, and IPFS portfolio links; AI Agent/Client profiles with agent name, description text area, and task history table",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Dois perfis: 1. Humanos (gig workers): perfil com nome, foto, skills...",
+          "2. Agentes IA / Clientes: perfil com nome do agente, descrição, histórico de tasks"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Profile type selection during onboarding",
+        "Human profiles store and display all specified fields including GPS coordinates",
+        "AI Agent profiles show agent metadata and complete task history",
+        "Skills dropdown contains all specified options plus custom entry",
+        "Portfolio links point to IPFS content"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Build Human Worker Dashboard displaying nearby available tasks with filters for skill type, location/distance, and price range; implement accept task button that changes task status to 'Em andamento'; provide proof upload interface for photos/videos with GPS timestamp capture; integrate IPFS storage for proof files with canister metadata storage; trigger automatic payment release after validation approval",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Dashboard Humanos: Lista tasks disponíveis próximas (filtro skill/local/preço). Aceitar task → status 'Em andamento'. Upload prova conclusão: foto/vídeo/GPS timestamp → IPFS + canister"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dashboard shows tasks sorted by distance from worker's location",
+        "All three filter types (skill, location, price) work independently and combined",
+        "Task status updates to 'Em andamento' when accepted",
+        "Photo/video uploads capture GPS coordinates and timestamp",
+        "Proof files stored on IPFS with hash recorded in canister",
+        "Payment automatically releases upon validation approval"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create public API endpoints for AI agents using HTTPS outcalls: POST /search accepting JSON body with skills array, lat/lon coordinates, raio_km radius, and max_preco price limit returning matching worker profiles as JSON array; POST /hire accepting perfil_id, task_desc, preco, and prazo_min to create on-chain signed contract; GET /status/{task_id} returning real-time task status updates",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "API para Agentes IA (pública, HTTPS outcalls): POST /search: {skills, lat, lon, raio_km, max_preco} → lista perfis JSON. POST /hire: {perfil_id, task_desc, preco, prazo_min} → contrato on-chain. GET /status/{task_id} → updates"
+        ]
+      },
+      "acceptanceCriteria": [
+        "POST /search filters workers by all provided criteria",
+        "POST /hire creates immutable on-chain contract record",
+        "GET /status returns current task state including worker progress",
+        "All endpoints return proper JSON responses",
+        "API accessible via HTTPS outcalls from external AI agents"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement escrow smart contract system where clients deposit ICP or euro-equivalent tokens that lock in contract until proof validation; create validation mechanism with two paths: automatic validation using GPS verification and AI image analysis, or decentralized voting by 3 randomly selected human validators; build dispute resolution system using NNS-style voting for contested tasks",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Escrow inteligente: cliente deposita ICP/€ → locked até prova aprovada. Validação: auto (GPS+IA análise imagem) OU voto descentralizado (3 humanos ICP). Dispute: arbitragem via NNS-like votação"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Funds locked in escrow cannot be accessed until validation completes",
+        "Automatic validation checks GPS coordinates and analyzes uploaded images",
+        "Manual validation randomly selects 3 human validators",
+        "Dispute system allows both parties to challenge validation results",
+        "NNS-style voting resolves disputes with community participation"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Build dual payment system supporting native cryptocurrency (ICP, ckBTC, cycles) for instant on-chain payments and EU-regulated fiat euro payments through integrated ramps; implement on-ramp via MoonPay or Stripe with EU-compliant KYC for clients to purchase ICP and pay for tasks; implement off-ramp for human workers to convert ICP to euros deposited to Portuguese IBAN or MBWay accounts; display transparent fee breakdowns for all transactions; ensure canister only handles ICP escrow without custodying fiat; maintain complete on-chain payment logs for compliance auditing",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "PAGAMENTOS 100% LEGAIS EU/PT (sem custódia pelo criador): Dual token/fiat via ramps regulados... On-ramp: Integre MoonPay/Stripe ramp no canister (KYC EU-compliant). Off-ramp para humanos: Após task, ICP → € via ramp (IBAN PT, MBWay). SEM CUSTÓDIA: Canister só escrows ICP"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Native crypto payments execute instantly on-chain",
+        "On-ramp integration allows euro to ICP conversion through regulated provider",
+        "Off-ramp enables workers to withdraw earnings to Portuguese bank accounts or MBWay",
+        "All transaction fees displayed before confirmation",
+        "Canister never holds fiat currency directly",
+        "Complete payment history stored on-chain and publicly auditable"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Integrate OpenStreetMap for displaying worker locations and task geography using HTTPS outcalls; implement real-time GPS tracking for workers during active tasks; display interactive map showing available tasks with distance indicators; create heat map visualization for task density in Évora and Lisboa regions",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "mapa interativo OpenStreetMap",
+          "Geolocalização soberana: HTTPS outcalls para OSM (sem Google lock-in)",
+          "Analytics: Dashboard earnings/mapa heat tasks Évora/Lisboa"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Map displays using OpenStreetMap tiles via HTTPS outcalls",
+        "Worker locations update in real-time on map",
+        "Available tasks shown as markers with distance from current location",
+        "Heat map visualizes task concentration in specified Portuguese cities",
+        "No dependency on Google Maps or proprietary location services"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Implement WebXR integration for AR-based task proofs allowing workers to capture augmented reality evidence for tasks requiring AR captures skill; store AR proof data alongside standard photo/video proofs in IPFS",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "AR proofs: Integre WebXR para tasks AR (Quantumoney-style)",
+          "skills (dropdown: 'AR captures'"
+        ]
+      },
+      "acceptanceCriteria": [
+        "WebXR session launches for tasks tagged with AR requirement",
+        "AR capture data stored in IPFS with metadata",
+        "AR proofs display properly in validation review interface",
+        "Feature works on WebXR-compatible mobile browsers"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Create NFT badge system awarding collectible achievement badges to high-performing workers; implement rating system that tracks worker performance across completed tasks; display badges in worker profiles and calculate aggregate ratings visible to potential clients",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Ratings/NFT badges: Bons performers ganham badges colecionáveis",
+          "rating histórico"
+        ]
+      },
+      "acceptanceCriteria": [
+        "NFT badges minted for achievement milestones",
+        "Rating system captures client feedback after task completion",
+        "Worker profiles prominently display earned badges",
+        "Historical ratings calculate average score across all tasks",
+        "Badges are transferable NFT assets"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Build real-time communication system using canister signals for direct messaging between clients and workers during active tasks; implement notification system for task updates, messages, and payment confirmations",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Chat signals: Real-time canister signals entre cliente-worker"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Messages delivered via canister signals without external dependencies",
+        "Real-time updates for task status changes",
+        "Push notifications for critical events",
+        "Chat history persists in canister storage",
+        "Message delivery confirmation system"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Create analytics dashboard showing worker earnings over time, task completion statistics, and geographic heat map of task activity specifically for Évora and Lisboa; make aggregate platform usage metrics publicly viewable on-chain",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Analytics: Dashboard earnings/mapa heat tasks Évora/Lisboa",
+          "Analytics: On-chain usage metrics públicas"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Worker dashboard displays personal earnings history with charts",
+        "Task completion statistics show success rates and trends",
+        "Geographic heat map highlights Évora and Lisboa activity",
+        "Platform-wide metrics accessible publicly via query calls",
+        "All analytics data verifiable on-chain"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Implement GDPR compliance features including self-service data deletion allowing users to remove their personal information, explicit consent checkboxes during profile creation for data processing, data export functionality providing users with all their stored data in machine-readable format, and privacy controls for profile visibility",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "GDPR: Dados auto-excluíveis, consentimento explícito"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can delete their profiles and all associated personal data",
+        "Explicit consent required before processing any personal information",
+        "Data export generates complete user data package",
+        "Privacy settings control profile visibility to other users",
+        "Deletion removes data from both frontend state and canister storage"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Generate and display Privacy Policy and Terms of Service documents in both Portuguese and English covering EU legal requirements, GDPR compliance, platform liability limitations, and gig economy relationship disclaimers; provide links to these documents in footer and during registration; include disclaimer stating 'Não é emprego formal. Gig economy. Consulte fiscalista PT.'",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Terms EU: Link legals (gerar Privacy Policy, ToS PT/EN)",
+          "Disclaimer: 'Não é emprego formal. Gig economy. Consulte fiscalista PT.'"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Privacy Policy and ToS available in Portuguese and English",
+        "Documents cover all required EU legal disclosures",
+        "Links accessible from footer on all pages",
+        "Gig economy disclaimer displayed prominently",
+        "Users must accept terms before creating profile"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Implement age verification gate requiring users to confirm they are 18 years or older through Internet Identity verification before accessing platform features; block access for users who cannot verify age requirement",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Age gate: 18+ verificado II"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Age gate appears before main platform access",
+        "Internet Identity verifies user is 18 or older",
+        "Underage users cannot proceed past verification",
+        "Age verification status persists with user profile"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Create automatic Portuguese tax reporting feature generating IVA (VAT) reports for workers earning over €10,000 annually; provide direct link to Portuguese Tax Authority (AT) portal for filing; display clear guidance about tax obligations for gig economy workers in Portugal",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Taxes: Auto-relatório IVA PT para earnings >€10k/ano (link AT portal)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "System tracks annual earnings per worker",
+        "IVA report auto-generates when threshold exceeded",
+        "Direct link to AT portal provided with report",
+        "Tax guidance displayed in worker dashboard",
+        "Reports include all required fields for Portuguese tax filing"
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "text": "Build mobile-first responsive UI using TailwindCSS with dark and light theme toggle; implement language switcher for Portuguese and English with all interface text translated; ensure optimal touch interactions and mobile navigation patterns; use React components following project architecture",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "UI moderna mobile-first (TailwindCSS + React/Vue), com mapa interativo OpenStreetMap, temas escuro/claro, multilíngue (PT/EN)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All layouts responsive and optimized for mobile screens first",
+        "Dark/light theme toggle persists user preference",
+        "Complete Portuguese and English translations for all UI text",
+        "Touch targets sized appropriately for mobile use",
+        "Theme applies consistently across all components"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Add footer to all pages containing copyright notice 'CanisterTask © 2026 Hermínio Coragem (HCoragem)' and legal text 'Plataforma soberana ICP. Não custodiamos fundos. Pagamentos via ramps regulados EU/PT.'; create About page with full creator attribution 'Created by Hermínio Coragem (HCoragem) from Évora, Portugal' and detailed explanation of platform's sovereign architecture and non-custodial payment model",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "AUTOR E LEGAL: No footer e About: 'CanisterTask © 2026 Hermínio Coragem (HCoragem). Plataforma soberana ICP. Não custodiamos fundos. Pagamentos via ramps regulados EU/PT.'"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Footer appears on every page with exact copyright text",
+        "Footer includes legal disclaimer about non-custodial payments",
+        "About page prominently features creator attribution",
+        "About page explains ICP sovereign infrastructure",
+        "About page clarifies regulated payment ramp model"
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "Configure Progressive Web App with complete manifest.json enabling installation as standalone mobile and web app; implement service worker for offline-first functionality caching critical assets and API responses; set up push notification system for task updates, messages, and payment alerts; ensure PWA passes installability criteria for all major browsers",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Otimize 100% para PWA: service worker, offline-first, push notifications, manifest.json instalável como app móvel/web"
+        ]
+      },
+      "acceptanceCriteria": [
+        "manifest.json includes all required PWA metadata with app icons",
+        "Service worker caches shell, assets, and critical API data",
+        "App functions offline with cached data",
+        "Push notifications work for task and payment events",
+        "Install prompt appears on supported browsers",
+        "App launches as standalone window when installed"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Implement social sharing functionality with buttons for X (Twitter) and Telegram that share platform content with pre-filled hashtags #CanisterTask and #ICPSoberano; optimize meta tags for SEO with focus keywords 'gig economy ICP' and 'tarefas IA Portugal'; configure custom domain support for canistertask.icp or hcoragem.canistertask.icp addressing",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ],
+        "quotes": [
+          "Share buttons: X/Telegram com #CanisterTask #ICPSoberano",
+          "SEO: Meta tags 'gig economy ICP', 'tarefas IA Portugal'",
+          "Custom domain: canistertask.icp ou hcoragem.canistertask.icp"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Share buttons pre-populate with specified hashtags",
+        "Meta tags include target SEO keywords",
+        "Open Graph and Twitter Card metadata configured",
+        "Custom ICP domain routing configured",
+        "Shared links display rich previews on social platforms"
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Design a modern, professional visual theme with warm earth tones inspired by Évora's historic architecture; use typography that balances readability on mobile with sophisticated desktop presentation; create an icon system that clearly communicates gig economy concepts (tasks, workers, verification, payments); ensure the design conveys trust, sovereignty, and technological innovation without using blue and purple color schemes",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Color palette reflects Portuguese cultural heritage with warm, earthy tones",
+        "Typography hierarchy works seamlessly from mobile to desktop",
+        "Icon system provides intuitive visual communication for platform actions",
+        "Design aesthetic communicates professionalism and trustworthiness",
+        "Visual identity distinguishes platform from typical crypto/blockchain UIs"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "text": "Render the generated platform icon as a static asset in frontend/public/assets/generated and display it as the app icon in manifest.json, favicon, and header logo",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "user-initial"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Icon file located at correct path in frontend/public/assets/generated",
+        "manifest.json references generated icon for all sizes",
+        "Favicon displays generated icon",
+        "Header includes icon as platform logo"
+      ]
+    }
+  ],
+  "constraints": [
+    "Must use Motoko for all backend canister logic in single-actor architecture",
+    "Must use React with TypeScript for frontend",
+    "Must use Internet Identity for authentication - no alternative auth methods",
+    "Must integrate with EU-regulated payment ramps (MoonPay or Stripe) for fiat transactions",
+    "Canister must never custody fiat currency - only handle ICP escrow",
+    "Must comply with GDPR data protection requirements",
+    "Must use OpenStreetMap for all location services - no Google Maps",
+    "Must support Portuguese and English languages throughout",
+    "Must be deployable to ICP mainnet",
+    "Must implement complete PWA specification with service worker and manifest",
+    "Must maintain on-chain audit logs for all financial transactions",
+    "Cannot implement real-time WebSocket features - use canister signals pattern instead"
+  ],
+  "nonGoals": [
+    "Integration with centralized job platforms",
+    "Support for languages beyond Portuguese and English",
+    "Direct employment or payroll features",
+    "Integration with non-EU payment providers",
+    "Support for location services beyond OpenStreetMap",
+    "Custodial wallet functionality",
+    "Traditional backend database usage",
+    "Native mobile apps (focus is PWA)",
+    "Cryptocurrency speculation or trading features",
+    "Integration with Web2 social media APIs beyond sharing buttons"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Professional platform icon/logo with gig economy symbolism incorporating Portuguese cultural elements in warm earth tones (canistertask-icon.dim_512x512.png)"
+    ],
+    "edits": []
+  }
+}

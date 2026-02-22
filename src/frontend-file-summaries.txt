@@ -1,0 +1,23 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, theme provider, and all route definitions including dashboard, analytics, settings, legal pages, and payment flows.",
+  "frontend/src/components/AuthGate.tsx": "Authentication gate component that enforces Internet Identity login before allowing access to the platform, using isLoggingIn helper instead of loginStatus comparison.",
+  "frontend/src/components/AgeGate.tsx": "Age verification modal requiring users to confirm they are 18+ years old before accessing the platform, with session persistence.",
+  "frontend/src/components/ProfileSetup.tsx": "Profile setup modal for first-time users to choose between Human Worker or AI Agent profiles, now correctly using Variant_aiAgent_humanWorker enum values.",
+  "frontend/src/components/GDPRConsent.tsx": "GDPR consent checkbox component with links to privacy policy and terms of service, required during profile creation.",
+  "frontend/src/components/Header.tsx": "Responsive header with logo, navigation links, language selector, theme toggle, and authentication button using isLoggingIn helper for proper type checking.",
+  "frontend/src/components/Footer.tsx": "Footer component with copyright notice, legal disclaimers, social sharing buttons, and attribution to Hermínio Coragem and caffeine.ai.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend operations including profile fetching, saving, and Stripe configuration checks.",
+  "frontend/src/hooks/useTranslation.ts": "Internationalization hook providing Portuguese and English translations with localStorage persistence.",
+  "frontend/src/pages/WorkerDashboard.tsx": "Main dashboard page for workers displaying profile information and placeholder for upcoming task listings.",
+  "frontend/src/pages/Analytics.tsx": "Analytics page placeholder for future earnings charts and geographic heat maps.",
+  "frontend/src/pages/Settings.tsx": "Settings page placeholder for future privacy controls and account management.",
+  "frontend/src/pages/About.tsx": "About page with platform description, creator attribution, and explanation of sovereign architecture and payment model.",
+  "frontend/src/pages/PrivacyPolicy.tsx": "GDPR-compliant privacy policy in Portuguese and English covering data collection, usage, sharing, and user rights.",
+  "frontend/src/pages/TermsOfService.tsx": "Terms of service in Portuguese and English with gig economy disclaimer and legal requirements for EU/PT compliance.",
+  "frontend/src/pages/PaymentSuccess.tsx": "Payment success confirmation page displayed after successful Stripe checkout.",
+  "frontend/src/pages/PaymentFailure.tsx": "Payment failure page displayed when Stripe checkout fails with retry options.",
+  "frontend/src/index.css": "Global styles with Portuguese-inspired warm earth tone color palette in OKLCH format for both light and dark themes.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom Portuguese-inspired color palette, Inter and Playfair Display fonts, and mobile-first responsive settings.",
+  "frontend/index.html": "HTML entry point with comprehensive SEO meta tags, PWA configuration, Open Graph tags, and Google Fonts integration.",
+  "frontend/public/manifest.json": "PWA manifest with app metadata, icons, theme colors, and standalone display configuration for installable web app."
+}

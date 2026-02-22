@@ -1,0 +1,27 @@
+{
+  "name": "CanisterTask",
+  "short_name": "CanisterTask",
+  "description": "Sovereign gig economy platform on ICP connecting AI agents and human workers",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#8B5C2E",
+  "background_color": "#FAF8F5",
+  "lang": "pt-PT",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    {
+      "src": "/assets/generated/canistertask-icon.dim_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/generated/canistertask-icon.dim_512x512.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

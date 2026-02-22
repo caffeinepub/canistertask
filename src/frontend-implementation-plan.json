@@ -1,0 +1,542 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "CanisterTask - Decentralized Gig Economy PWA Platform Frontend Implementation",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Implement Internet Identity authentication with mandatory login gate",
+      "acceptanceCriteria": [
+        "Users cannot access platform without Internet Identity login",
+        "Login state persists across sessions",
+        "Authentication integrates with both human and AI agent profile flows"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AuthGate.tsx",
+          "operation": "create",
+          "description": "Create authentication gate component that wraps the entire application, requiring Internet Identity login before showing any content. Display login button and platform branding when not authenticated. Use the authorization component's useInternetIdentity hook and ensure users see only the login interface until authenticated."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap all application routes inside AuthGate component to enforce authentication requirement. Ensure no platform features are accessible without login."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Create dual user profile system with onboarding flow for Human Workers and AI Agents",
+      "acceptanceCriteria": [
+        "Profile type selection during onboarding",
+        "Human profiles store and display all specified fields including GPS coordinates",
+        "AI Agent profiles show agent metadata and complete task history",
+        "Skills dropdown contains all specified options plus custom entry",
+        "Portfolio links point to IPFS content"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ProfileSetup.tsx",
+          "operation": "create",
+          "description": "Create profile setup modal that appears after first login. Include profile type selector (Human Worker vs AI Agent/Client). For Human Workers: name input, photo upload interface using the blob-storage component (verify component usage instructions before implementing), skills dropdown with options 'Fotografar locais', 'Entregas rápidas', 'Verificações presenciais', 'AR captures' plus custom text input, GPS location capture, action radius slider (km), price per task/hour input (euros), availability calendar picker, IPFS portfolio link inputs. For AI Agents: agent name input, description textarea. Use saveCallerUserProfile to persist profile data."
+        },
+        {
+          "path": "frontend/src/hooks/useProfileSetup.ts",
+          "operation": "create",
+          "description": "Create hook managing profile setup flow. Check if user has profile using getCallerUserProfile. Return loading state to prevent modal flash. Handle profile creation for both Human Worker and AI Agent types, including photo upload for workers using the blob-storage component (verify component usage instructions before implementing). Use authorization component's profile methods."
+        },
+        {
+          "path": "frontend/src/components/ProfileView.tsx",
+          "operation": "create",
+          "description": "Create profile viewing component displaying user profile based on type. For Human Workers: show name, photo, skills badges, location on map, action radius, price, availability, rating stars, IPFS portfolio links. For AI Agents: show agent name, description, task history table. Use getUserProfile for viewing other profiles and getCallerUserProfile for own profile."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Build Human Worker Dashboard with task discovery, acceptance, and proof submission",
+      "acceptanceCriteria": [
+        "Dashboard shows tasks sorted by distance from worker's location",
+        "All three filter types (skill, location, price) work independently and combined",
+        "Task status updates to 'Em andamento' when accepted",
+        "Photo/video uploads capture GPS coordinates and timestamp",
+        "Proof files stored on IPFS with hash recorded in canister",
+        "Payment automatically releases upon validation approval"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/WorkerDashboard.tsx",
+          "operation": "create",
+          "description": "Create Human Worker dashboard page displaying nearby available tasks. Include filter controls for skill type dropdown, location/distance slider, price range inputs. Show task cards sorted by distance with skill badges, location, price, duration. Each task card has 'Aceitar' button that calls backend to change status to 'Em andamento'. Restrict access to Human Worker profile types only."
+        },
+        {
+          "path": "frontend/src/components/ProofUpload.tsx",
+          "operation": "create",
+          "description": "Create proof upload component for task completion evidence. Support photo/video file selection with automatic GPS coordinate capture and timestamp generation. Use the blob-storage component to upload proof files to IPFS (verify component usage instructions before implementing). Display upload progress. Submit proof metadata including IPFS hash, GPS coordinates, and timestamp to backend. Show upload status and confirmation."
+        },
+        {
+          "path": "frontend/src/hooks/useTasks.ts",
+          "operation": "create",
+          "description": "Create hooks for task operations: fetching nearby tasks with filtering, accepting tasks, uploading proofs, checking task status. Implement query invalidation after task actions to refresh dashboard data."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Implement dual payment system UI with crypto and fiat support",
+      "acceptanceCriteria": [
+        "Native crypto payments execute instantly on-chain",
+        "On-ramp integration allows euro to ICP conversion through regulated provider",
+        "Off-ramp enables workers to withdraw earnings to Portuguese bank accounts or MBWay",
+        "All transaction fees displayed before confirmation",
+        "Canister never holds fiat currency directly",
+        "Complete payment history stored on-chain and publicly auditable"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/PaymentSetup.tsx",
+          "operation": "create",
+          "description": "Create Stripe payment configuration component for admin use. Use the stripe component's isStripeConfigured and setStripeConfiguration methods. Check if Stripe is configured, and if not, show admin panel requesting Stripe secret key and allowed countries list. Display current configuration status. Only render for admin users."
+        },
+        {
+          "path": "frontend/src/components/Payment.tsx",
+          "operation": "create",
+          "description": "Create payment component supporting both crypto (ICP, ckBTC) and fiat (EUR via Stripe) payment methods. For fiat: use the stripe component's checkout flow with createCheckoutSession (verify component usage instructions before implementing). Display payment method selector, amount, fee breakdown. For crypto: show wallet connection interface and transaction confirmation. Include clear disclaimer that canister does not custody fiat."
+        },
+        {
+          "path": "frontend/src/hooks/useCheckout.ts",
+          "operation": "create",
+          "description": "Create checkout hook using the stripe component for fiat payments (verify component usage instructions before implementing). Implement useCreateCheckoutSession mutation that calls backend createCheckoutSession with ShoppingItem array. Parse JSON response to validate session.url exists before redirecting. Use window.location.href for Stripe URL redirection, never router navigation. Handle checkout errors gracefully."
+        },
+        {
+          "path": "frontend/src/pages/PaymentSuccess.tsx",
+          "operation": "create",
+          "description": "Create payment success page showing confirmation message, transaction details, and next steps. Display payment reference and link back to dashboard. Fetch session status from backend using getStripeSessionStatus to confirm payment."
+        },
+        {
+          "path": "frontend/src/pages/PaymentFailure.tsx",
+          "operation": "create",
+          "description": "Create payment failure page showing error message and retry options. Provide link to contact support and return to payment selection. Display reason for failure if available."
+        },
+        {
+          "path": "frontend/src/components/PaymentHistory.tsx",
+          "operation": "create",
+          "description": "Create payment history component displaying transaction log with date, type (crypto/fiat), amount, status, fees. Include filters for date range and payment type. Show on-chain verification links for crypto transactions."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add routes for /payment-success to PaymentSuccess component and /payment-failure to PaymentFailure component using @tanstack/router. Ensure routes are accessible during payment flow."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Integrate OpenStreetMap for location display and task geography",
+      "acceptanceCriteria": [
+        "Map displays using OpenStreetMap tiles via HTTPS outcalls",
+        "Worker locations update in real-time on map",
+        "Available tasks shown as markers with distance from current location",
+        "Heat map visualizes task concentration in specified Portuguese cities",
+        "No dependency on Google Maps or proprietary location services"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Map.tsx",
+          "operation": "create",
+          "description": "Create interactive map component using OpenStreetMap tiles via Leaflet or similar React library. Display worker locations as markers with profile preview popups. Show available tasks as distinct markers with task details on click. Implement user's current location marker. Support real-time position updates. Include map controls for zoom and center."
+        },
+        {
+          "path": "frontend/src/components/TaskHeatMap.tsx",
+          "operation": "create",
+          "description": "Create heat map visualization component overlaying task density on OpenStreetMap. Focus on Évora and Lisboa regions. Use color intensity to show task concentration. Include legend and region labels."
+        },
+        {
+          "path": "frontend/src/hooks/useGeolocation.ts",
+          "operation": "create",
+          "description": "Create geolocation hook for accessing user's GPS coordinates. Request browser geolocation permission. Provide current position and update mechanism. Handle permission denial gracefully. Support real-time position tracking for active tasks."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Implement WebXR integration for AR-based task proofs",
+      "acceptanceCriteria": [
+        "WebXR session launches for tasks tagged with AR requirement",
+        "AR capture data stored in IPFS with metadata",
+        "AR proofs display properly in validation review interface",
+        "Feature works on WebXR-compatible mobile browsers"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ARCapture.tsx",
+          "operation": "create",
+          "description": "Create AR capture component using WebXR API. Launch AR session when user initiates AR proof capture for tasks requiring 'AR captures' skill. Capture AR scene data, camera feed, and spatial information. Use the blob-storage component to store AR proof data in IPFS (verify component usage instructions before implementing). Include fallback message for non-WebXR browsers. Handle AR session errors gracefully."
+        },
+        {
+          "path": "frontend/src/hooks/useWebXR.ts",
+          "operation": "create",
+          "description": "Create WebXR hook managing AR session lifecycle. Check WebXR support in browser. Initialize and terminate AR sessions. Provide AR capture callback. Handle permissions and errors."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Create NFT badge system and rating display",
+      "acceptanceCriteria": [
+        "NFT badges minted for achievement milestones",
+        "Rating system captures client feedback after task completion",
+        "Worker profiles prominently display earned badges",
+        "Historical ratings calculate average score across all tasks",
+        "Badges are transferable NFT assets"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/BadgeGallery.tsx",
+          "operation": "create",
+          "description": "Create badge gallery component displaying earned NFT badges in worker profiles. Show badge icons, names, descriptions, and acquisition dates. Highlight rare or special badges. Include empty state for workers without badges."
+        },
+        {
+          "path": "frontend/src/components/RatingDisplay.tsx",
+          "operation": "create",
+          "description": "Create rating display component showing worker's historical rating as star visualization. Display average rating score and total number of ratings. Include rating breakdown by task type if available."
+        },
+        {
+          "path": "frontend/src/components/RatingForm.tsx",
+          "operation": "create",
+          "description": "Create rating form component for clients to rate workers after task completion. Include star rating selector (1-5 stars), optional text feedback, and submit button. Call backend to record rating."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Build real-time communication system for client-worker messaging",
+      "acceptanceCriteria": [
+        "Messages delivered via canister signals without external dependencies",
+        "Real-time updates for task status changes",
+        "Push notifications for critical events",
+        "Chat history persists in canister storage",
+        "Message delivery confirmation system"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Chat.tsx",
+          "operation": "create",
+          "description": "Create chat component for direct messaging between clients and workers during active tasks. Display message history with sender identification, timestamps, and read status. Include message input field and send button. Poll backend for new messages using canister signals pattern. Show typing indicators and delivery confirmations."
+        },
+        {
+          "path": "frontend/src/components/NotificationCenter.tsx",
+          "operation": "create",
+          "description": "Create notification center component displaying recent notifications for task updates, new messages, payment confirmations. Include notification badges on header icon. Allow dismissing and marking as read. Persist notification state locally."
+        },
+        {
+          "path": "frontend/src/hooks/useNotifications.ts",
+          "operation": "create",
+          "description": "Create notifications hook managing notification state and polling. Fetch notifications from backend periodically. Provide methods to mark as read and dismiss. Handle notification permissions for browser push notifications."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Create analytics dashboard with earnings and geographic heat map",
+      "acceptanceCriteria": [
+        "Worker dashboard displays personal earnings history with charts",
+        "Task completion statistics show success rates and trends",
+        "Geographic heat map highlights Évora and Lisboa activity",
+        "Platform-wide metrics accessible publicly via query calls",
+        "All analytics data verifiable on-chain"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Analytics.tsx",
+          "operation": "create",
+          "description": "Create analytics page displaying worker earnings over time using chart library (recharts or similar). Show task completion statistics, success rates, and trends. Include geographic heat map component focusing on Évora and Lisboa. For workers: show personal analytics. For public view: show aggregate platform metrics. Fetch data from backend analytics methods."
+        },
+        {
+          "path": "frontend/src/components/EarningsChart.tsx",
+          "operation": "create",
+          "description": "Create earnings chart component visualizing worker income over time. Support multiple time ranges (week, month, year). Display total earnings, average per task, and payment breakdown by method (crypto/fiat). Use line or bar chart visualization."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Implement GDPR compliance features for data control",
+      "acceptanceCriteria": [
+        "Users can delete their profiles and all associated personal data",
+        "Explicit consent required before processing any personal information",
+        "Data export generates complete user data package",
+        "Privacy settings control profile visibility to other users",
+        "Deletion removes data from both frontend state and canister storage"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/GDPRConsent.tsx",
+          "operation": "create",
+          "description": "Create GDPR consent component displayed during profile creation. Show checkboxes for explicit consent to data processing, terms acceptance, and privacy policy acknowledgment. Include links to full legal documents. Require all consents before allowing profile creation. Store consent status with timestamp."
+        },
+        {
+          "path": "frontend/src/components/PrivacyControls.tsx",
+          "operation": "create",
+          "description": "Create privacy controls component in user settings. Include profile visibility toggle (public/private), data export button generating JSON file with all user data, account deletion button with confirmation dialog. Show data processing summary and consent history."
+        },
+        {
+          "path": "frontend/src/pages/Settings.tsx",
+          "operation": "create",
+          "description": "Create settings page containing privacy controls, profile edit options, notification preferences, language selector, and theme toggle. Organize into tabs or sections. Include save confirmation feedback."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Generate and display Privacy Policy and Terms of Service documents",
+      "acceptanceCriteria": [
+        "Privacy Policy and ToS available in Portuguese and English",
+        "Documents cover all required EU legal disclosures",
+        "Links accessible from footer on all pages",
+        "Gig economy disclaimer displayed prominently",
+        "Users must accept terms before creating profile"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/PrivacyPolicy.tsx",
+          "operation": "create",
+          "description": "Create Privacy Policy page with full GDPR-compliant text in both Portuguese and English. Include language selector toggle. Cover data collection, processing, storage, user rights, cookies, third-party services (Stripe, IPFS), and contact information. Structure with clear headings and sections."
+        },
+        {
+          "path": "frontend/src/pages/TermsOfService.tsx",
+          "operation": "create",
+          "description": "Create Terms of Service page with full legal text in Portuguese and English. Include language selector. Cover platform usage rules, user obligations, liability limitations, payment terms, dispute resolution, gig economy relationship disclaimer, and termination conditions. Display prominent disclaimer: 'Não é emprego formal. Gig economy. Consulte fiscalista PT.'"
+        },
+        {
+          "path": "frontend/src/components/Footer.tsx",
+          "operation": "create",
+          "description": "Create footer component displayed on all pages. Include copyright notice 'CanisterTask © 2026 Hermínio Coragem (HCoragem)' and legal text 'Plataforma soberana ICP. Não custodiamos fundos. Pagamentos via ramps regulados EU/PT.' Add links to Privacy Policy, Terms of Service, and About page. Include social media share buttons with pre-filled hashtags."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add routes for /privacy-policy to PrivacyPolicy component and /terms-of-service to TermsOfService component. Include Footer component in main layout so it appears on all pages."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Implement age verification gate using Internet Identity",
+      "acceptanceCriteria": [
+        "Age gate appears before main platform access",
+        "Internet Identity verifies user is 18 or older",
+        "Underage users cannot proceed past verification",
+        "Age verification status persists with user profile"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AgeGate.tsx",
+          "operation": "create",
+          "description": "Create age verification component displayed after Internet Identity login but before profile setup. Show 18+ age requirement message and verification button. Call backend to verify age through Internet Identity. Block access if verification fails. Store verification status to prevent repeated checks. Display clear messaging about age requirement and platform policies."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Create automatic Portuguese tax reporting feature",
+      "acceptanceCriteria": [
+        "System tracks annual earnings per worker",
+        "IVA report auto-generates when threshold exceeded",
+        "Direct link to AT portal provided with report",
+        "Tax guidance displayed in worker dashboard",
+        "Reports include all required fields for Portuguese tax filing"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/TaxReporting.tsx",
+          "operation": "create",
+          "description": "Create tax reporting component for workers earning over €10,000 annually. Display annual earnings summary, IVA calculation, and tax obligation notice. Generate IVA report with all required Portuguese tax fields. Provide direct link to Portuguese Tax Authority (AT) portal for filing. Include clear guidance about gig economy tax obligations in Portugal. Show threshold progress indicator."
+        },
+        {
+          "path": "frontend/src/pages/WorkerDashboard.tsx",
+          "operation": "modify",
+          "description": "Add tax reporting section to Worker Dashboard showing annual earnings and tax status. Display alert when approaching or exceeding €10,000 threshold. Include link to full tax reporting component."
+        }
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "summary": "Build mobile-first responsive UI with dark/light theme and multilingual support",
+      "acceptanceCriteria": [
+        "All layouts responsive and optimized for mobile screens first",
+        "Dark/light theme toggle persists user preference",
+        "Complete Portuguese and English translations for all UI text",
+        "Touch targets sized appropriately for mobile use",
+        "Theme applies consistently across all components"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ThemeToggle.tsx",
+          "operation": "create",
+          "description": "Create theme toggle component switching between dark and light modes. Use context or localStorage to persist theme preference. Apply theme classes to root element. Include sun/moon icon button in header."
+        },
+        {
+          "path": "frontend/src/hooks/useTheme.ts",
+          "operation": "create",
+          "description": "Create theme hook managing theme state and persistence. Provide current theme and toggle function. Apply theme class to document root. Load saved preference on mount."
+        },
+        {
+          "path": "frontend/src/i18n/translations.ts",
+          "operation": "create",
+          "description": "Create translation file containing all UI text in Portuguese and English. Structure as nested objects by feature area (auth, profile, tasks, payments, etc.). Include all buttons, labels, messages, and content text."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "create",
+          "description": "Create translation hook providing current language, language setter, and translation function. Persist language preference in localStorage. Default to Portuguese for Portuguese users, English otherwise. Provide t() function for accessing translated strings by key path."
+        },
+        {
+          "path": "frontend/src/components/LanguageSelector.tsx",
+          "operation": "create",
+          "description": "Create language selector component with PT/EN toggle or dropdown. Display in header and settings page. Update all UI text when language changes using translation hook."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add dark mode theme colors using CSS variables for primary, secondary, background, foreground, and accent colors. Define warm earth tone palette inspired by Évora architecture. Ensure all color definitions support both light and dark themes. Add mobile-first responsive utilities and touch-friendly sizing."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Configure Tailwind with custom color palette using warm earth tones (terracotta, sand, olive, ochre). Define dark mode strategy using class-based approach. Add custom spacing for mobile touch targets (min 44px). Configure responsive breakpoints for mobile-first approach. Add custom typography scale balancing mobile readability with desktop sophistication."
+        }
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "summary": "Add footer with attribution and create About page",
+      "acceptanceCriteria": [
+        "Footer appears on every page with exact copyright text",
+        "Footer includes legal disclaimer about non-custodial payments",
+        "About page prominently features creator attribution",
+        "About page explains ICP sovereign infrastructure",
+        "About page clarifies regulated payment ramp model"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/About.tsx",
+          "operation": "create",
+          "description": "Create About page with full creator attribution: 'Created by Hermínio Coragem (HCoragem) from Évora, Portugal'. Explain platform's mission, sovereign ICP architecture advantages, non-custodial payment model, and gig economy vision. Include sections on technology stack, security approach, and decentralization benefits. Add creator photo or profile if available. Use engaging storytelling format."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /about to About component. Ensure Footer component appears in main layout rendering across all pages."
+        }
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "summary": "Configure Progressive Web App with offline functionality and push notifications",
+      "acceptanceCriteria": [
+        "manifest.json includes all required PWA metadata with app icons",
+        "Service worker caches shell, assets, and critical API data",
+        "App functions offline with cached data",
+        "Push notifications work for task and payment events",
+        "Install prompt appears on supported browsers",
+        "App launches as standalone window when installed"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/manifest.json",
+          "operation": "modify",
+          "description": "Update PWA manifest with complete metadata: name 'CanisterTask', short_name, description, theme_color (warm earth tone), background_color, display 'standalone', start_url, scope, orientation 'any'. Include icons array referencing generated platform icon at frontend/public/assets/generated/canistertask-icon.dim_512x512.png in multiple sizes (192x192, 512x512). Add categories and lang settings."
+        },
+        {
+          "path": "frontend/public/service-worker.js",
+          "operation": "create",
+          "description": "Create service worker implementing offline-first caching strategy. Cache app shell (HTML, CSS, JS), static assets, and critical API responses. Implement cache-first strategy for assets, network-first for API calls with cache fallback. Handle push notification events for task updates, messages, and payments. Include cache versioning and cleanup. Register notification click handlers."
+        },
+        {
+          "path": "frontend/src/utils/pwa.ts",
+          "operation": "create",
+          "description": "Create PWA utility functions for service worker registration, update checking, and install prompt handling. Request notification permissions. Provide functions to subscribe to push notifications. Handle beforeinstallprompt event to show custom install UI. Track PWA installation state."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Register service worker on app initialization. Set up push notification subscription after user authentication. Handle service worker updates with user notification."
+        },
+        {
+          "path": "frontend/public/index.html",
+          "operation": "modify",
+          "description": "Add PWA meta tags: theme-color, apple-mobile-web-app-capable, apple-mobile-web-app-status-bar-style. Link to manifest.json. Add favicon link referencing generated platform icon at frontend/public/assets/generated/canistertask-icon.dim_512x512.png. Include apple-touch-icon links for iOS."
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Implement social sharing and SEO optimization",
+      "acceptanceCriteria": [
+        "Share buttons pre-populate with specified hashtags",
+        "Meta tags include target SEO keywords",
+        "Open Graph and Twitter Card metadata configured",
+        "Custom ICP domain routing configured",
+        "Shared links display rich previews on social platforms"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ShareButtons.tsx",
+          "operation": "create",
+          "description": "Create social share buttons component for X (Twitter) and Telegram. Pre-fill share text with hashtags #CanisterTask #ICPSoberano. Include current page URL and relevant content description. Style buttons with platform brand colors. Open share dialogs in new windows."
+        },
+        {
+          "path": "frontend/public/index.html",
+          "operation": "modify",
+          "description": "Add comprehensive SEO meta tags: title, description with keywords 'gig economy ICP', 'tarefas IA Portugal'. Include Open Graph tags for Facebook/LinkedIn (og:title, og:description, og:image, og:url, og:type). Add Twitter Card tags (twitter:card, twitter:title, twitter:description, twitter:image). Set canonical URL. Add robots meta tag. Include structured data JSON-LD for organization markup."
+        }
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "summary": "Design modern visual theme with Portuguese cultural elements",
+      "acceptanceCriteria": [
+        "Color palette reflects Portuguese cultural heritage with warm, earthy tones",
+        "Typography hierarchy works seamlessly from mobile to desktop",
+        "Icon system provides intuitive visual communication for platform actions",
+        "Design aesthetic communicates professionalism and trustworthiness",
+        "Visual identity distinguishes platform from typical crypto/blockchain UIs"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/IconSystem.tsx",
+          "operation": "create",
+          "description": "Create icon component system using lucide-react or similar library. Define consistent icon set for gig economy concepts: tasks (briefcase), workers (users), verification (check-circle), payments (banknote), location (map-pin), messages (message-circle), badges (award), AR (cube), upload (upload-cloud). Ensure icons are sized appropriately for mobile touch targets and desktop clarity."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Configure custom typography using font families that balance mobile readability with desktop sophistication. Define font size scale from mobile-optimized body text to impactful desktop headings. Set line heights and letter spacing for optimal readability. Add font weight variations for hierarchy. Include Portuguese character support."
+        }
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "summary": "Display generated platform icon across application",
+      "acceptanceCriteria": [
+        "Icon file located at correct path in frontend/public/assets/generated",
+        "manifest.json references generated icon for all sizes",
+        "Favicon displays generated icon",
+        "Header includes icon as platform logo"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "create",
+          "description": "Create header component displaying platform logo using generated icon at frontend/public/assets/generated/canistertask-icon.dim_512x512.png. Include platform name 'CanisterTask', navigation links, language selector, theme toggle, notification bell icon, and login/logout button. Make header sticky on scroll. Ensure responsive layout for mobile."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add Header component to main layout so it appears on all pages. Ensure proper routing integration with header navigation links."
+        }
+      ]
+    }
+  ]
+}
