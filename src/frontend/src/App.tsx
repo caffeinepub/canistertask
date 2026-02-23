@@ -2,31 +2,29 @@ import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } fr
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AuthGate from './components/AuthGate';
+import AgeGate from './components/AgeGate';
+import ProfileSetup from './components/ProfileSetup';
 import WorkerDashboard from './pages/WorkerDashboard';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import About from './pages/About';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
-import Cookies from './pages/Cookies';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailure from './pages/PaymentFailure';
 import AdminDashboard from './pages/AdminDashboard';
 import Notifications from './pages/Notifications';
 import MyProfile from './pages/MyProfile';
 import PublicProfile from './pages/PublicProfile';
-import Workers from './pages/Workers';
-import CookieConsentBanner from './components/CookieConsentBanner';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      staleTime: 1000 * 60 * 5,
       refetchOnWindowFocus: false,
-      retry: 1,
     },
   },
 });
@@ -36,10 +34,15 @@ function Layout() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <Outlet />
+        <AuthGate>
+          <AgeGate>
+            <ProfileSetup>
+              <Outlet />
+            </ProfileSetup>
+          </AgeGate>
+        </AuthGate>
       </main>
       <Footer />
-      <CookieConsentBanner />
     </div>
   );
 }
@@ -51,135 +54,79 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: () => (
-    <AuthGate>
-      <WorkerDashboard />
-    </AuthGate>
-  ),
+  component: WorkerDashboard,
 });
 
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/dashboard',
-  component: () => (
-    <AuthGate>
-      <WorkerDashboard />
-    </AuthGate>
-  ),
+  component: WorkerDashboard,
 });
 
 const analyticsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/analytics',
-  component: () => (
-    <AuthGate>
-      <Analytics />
-    </AuthGate>
-  ),
+  component: Analytics,
 });
 
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings',
-  component: () => (
-    <AuthGate>
-      <Settings />
-    </AuthGate>
-  ),
+  component: Settings,
 });
 
 const aboutRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/sobre',
+  path: '/about',
   component: About,
 });
 
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/privacidade',
+  path: '/privacy',
   component: PrivacyPolicy,
 });
 
 const termsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/termos',
+  path: '/terms',
   component: TermsOfService,
-});
-
-const cookiesRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/cookies',
-  component: Cookies,
 });
 
 const paymentSuccessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/payment-success',
-  component: () => (
-    <AuthGate>
-      <PaymentSuccess />
-    </AuthGate>
-  ),
+  component: PaymentSuccess,
 });
 
 const paymentFailureRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/payment-failure',
-  component: () => (
-    <AuthGate>
-      <PaymentFailure />
-    </AuthGate>
-  ),
+  component: PaymentFailure,
 });
 
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin',
-  component: () => (
-    <AuthGate>
-      <AdminDashboard />
-    </AuthGate>
-  ),
+  component: AdminDashboard,
 });
 
 const notificationsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/notifications',
-  component: () => (
-    <AuthGate>
-      <Notifications />
-    </AuthGate>
-  ),
+  component: Notifications,
 });
 
 const myProfileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/perfil',
-  component: () => (
-    <AuthGate>
-      <MyProfile />
-    </AuthGate>
-  ),
+  component: MyProfile,
 });
 
 const publicProfileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/perfil/$userId',
-  component: () => (
-    <AuthGate>
-      <PublicProfile />
-    </AuthGate>
-  ),
-});
-
-const workersRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/workers',
-  component: () => (
-    <AuthGate>
-      <Workers />
-    </AuthGate>
-  ),
+  component: PublicProfile,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -190,14 +137,12 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   privacyRoute,
   termsRoute,
-  cookiesRoute,
   paymentSuccessRoute,
   paymentFailureRoute,
   adminRoute,
   notificationsRoute,
   myProfileRoute,
   publicProfileRoute,
-  workersRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -212,10 +157,8 @@ export default function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <RouterProvider router={router} />
-          <Toaster />
-        </TooltipProvider>
+        <RouterProvider router={router} />
+        <Toaster />
       </QueryClientProvider>
     </ThemeProvider>
   );

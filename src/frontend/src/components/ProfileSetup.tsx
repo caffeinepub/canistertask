@@ -101,11 +101,11 @@ export default function ProfileSetup({ children }: ProfileSetupProps) {
 
             <div className="text-center text-sm text-muted-foreground">
               {t('gdpr.consent')}{' '}
-              <Link to="/privacidade" className="text-primary underline hover:text-primary/80">
+              <Link to="/privacy" className="text-primary underline hover:text-primary/80">
                 {t('gdpr.privacyPolicy')}
               </Link>{' '}
               {t('gdpr.and')}{' '}
-              <Link to="/termos" className="text-primary underline hover:text-primary/80">
+              <Link to="/terms" className="text-primary underline hover:text-primary/80">
                 {t('gdpr.terms')}
               </Link>
               .

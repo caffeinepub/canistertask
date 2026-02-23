@@ -1,7 +1,7 @@
 import { useTranslation } from '../hooks/useTranslation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, FileText, Users, Euro, Scale, Shield, Ban } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 export default function TermsOfService() {
   const { t, language } = useTranslation();
@@ -9,139 +9,107 @@ export default function TermsOfService() {
   const content =
     language === 'pt'
       ? {
-          disclaimer: 'AVISO IMPORTANTE: O CanisterTask é uma plataforma de gig economy. Não existe relação de emprego formal. Consulte um fiscalista para obrigações fiscais em Portugal.',
+          disclaimer: 'Não é emprego formal. Gig economy. Consulte fiscalista PT.',
           sections: [
             {
-              icon: FileText,
               title: '1. Aceitação dos Termos',
               content:
-                'Ao utilizar o CanisterTask, aceita estes Termos de Serviço na íntegra. Se não concordar com qualquer parte destes termos, não utilize a plataforma. Estes termos constituem um acordo legal vinculativo entre você e o CanisterTask.',
+                'Ao utilizar o CanisterTask, aceita estes Termos de Serviço. Se não concordar, não utilize a plataforma.',
             },
             {
-              icon: Users,
-              title: '2. Natureza da Relação - Plataforma de Intermediação',
+              title: '2. Natureza da Relação',
               content:
-                'O CanisterTask é uma plataforma de intermediação de gig economy. NÃO existe relação de emprego entre trabalhadores e clientes, nem entre trabalhadores e a plataforma. Cada utilizador é um prestador de serviços independente, responsável pelas suas próprias obrigações fiscais, segurança social, e seguros. A plataforma apenas facilita a conexão entre partes.',
+                'O CanisterTask é uma plataforma de gig economy. Não existe relação de emprego entre trabalhadores e clientes. Cada utilizador é responsável pelas suas obrigações fiscais.',
             },
             {
-              icon: Euro,
-              title: '3. Pagamentos e Taxa da Plataforma (7%)',
+              title: '3. Obrigações dos Utilizadores',
               content:
-                'O CanisterTask cobra uma taxa de 7% sobre o valor de cada transação concluída. Esta taxa é deduzida automaticamente do pagamento total. Exemplo: Task de €100 → Trabalhador recebe €93, Plataforma recebe €7. Os pagamentos são processados através de smart contracts no ICP. Suportamos ICP, ckBTC, e conversões fiat via ramps regulados (Stripe, MoonPay). Todos os valores são finais após confirmação on-chain.',
+                'Deve: ter 18+ anos, fornecer informações verdadeiras, cumprir as leis locais, e respeitar outros utilizadores.',
             },
             {
-              icon: Scale,
-              title: '4. Obrigações dos Utilizadores',
+              title: '4. Pagamentos',
               content:
-                'Trabalhadores devem: (a) Fornecer informações precisas e atualizadas; (b) Cumprir prazos e requisitos das tasks aceites; (c) Declarar rendimentos às autoridades fiscais portuguesas; (d) Manter seguros adequados (responsabilidade civil, acidentes de trabalho). Clientes devem: (a) Descrever tasks de forma clara e precisa; (b) Pagar o valor acordado após conclusão satisfatória; (c) Fornecer feedback honesto e construtivo.',
+                'Os pagamentos são processados via smart contracts de escrow. A plataforma não custodia fundos fiat. Ramps regulados EU/PT gerem conversões fiat.',
             },
             {
-              icon: Shield,
-              title: '5. Responsabilidade e Garantias',
+              title: '5. Limitação de Responsabilidade',
               content:
-                'A plataforma é fornecida "AS IS" sem garantias. O CanisterTask não é responsável por: (a) Qualidade ou resultado das tasks executadas; (b) Disputas entre trabalhadores e clientes; (c) Danos, perdas ou lesões durante a execução de tasks; (d) Incumprimento de obrigações fiscais ou legais por utilizadores; (e) Perdas financeiras resultantes de flutuações de crypto. Responsabilidade máxima limitada ao valor da taxa de plataforma da transação em questão.',
+                'A plataforma não é responsável por: disputas entre utilizadores, perdas financeiras, ou danos resultantes do uso da plataforma.',
             },
             {
-              icon: Scale,
               title: '6. Resolução de Disputas',
               content:
-                'Em caso de disputa: (1) Tente resolver diretamente com a outra parte através do chat da plataforma; (2) Se não resolver, pode solicitar mediação da plataforma (não vinculativa); (3) Disputas legais serão resolvidas nos tribunais de Évora, Portugal, sob lei portuguesa. Para disputas de consumo, pode recorrer ao Centro de Arbitragem de Conflitos de Consumo.',
+                'Disputas são resolvidas via sistema de votação descentralizado. Decisões são finais e vinculativas.',
             },
             {
-              icon: FileText,
-              title: '7. Conformidade EU Platform Work Directive',
+              title: '7. Terminação',
               content:
-                'Em conformidade com a EU Platform Work Directive: (a) Transparência total sobre algoritmos de matching e preços; (b) Direito a explicação sobre decisões automatizadas; (c) Processo justo de desativação de conta (com aviso prévio e direito de recurso); (d) Acesso a dados sobre desempenho e avaliações; (e) Proteção de dados conforme GDPR.',
-            },
-            {
-              icon: Ban,
-              title: '8. Suspensão e Terminação',
-              content:
-                'Podemos suspender ou terminar contas em caso de: (a) Violação destes Termos de Serviço; (b) Atividade fraudulenta ou ilegal; (c) Comportamento abusivo ou assédio; (d) Múltiplas reclamações fundamentadas. Você pode encerrar a sua conta a qualquer momento através das configurações. Dados serão retidos conforme Política de Privacidade e obrigações legais.',
+                'Pode eliminar a sua conta a qualquer momento. Reservamo-nos o direito de suspender contas que violem estes termos.',
             },
           ],
         }
       : {
-          disclaimer: 'IMPORTANT NOTICE: CanisterTask is a gig economy platform. There is no formal employment relationship. Consult a tax advisor for tax obligations in Portugal.',
+          disclaimer: 'Not formal employment. Gig economy. Consult PT tax advisor.',
           sections: [
             {
-              icon: FileText,
               title: '1. Acceptance of Terms',
               content:
-                'By using CanisterTask, you accept these Terms of Service in full. If you do not agree with any part of these terms, do not use the platform. These terms constitute a legally binding agreement between you and CanisterTask.',
+                'By using CanisterTask, you accept these Terms of Service. If you disagree, do not use the platform.',
             },
             {
-              icon: Users,
-              title: '2. Nature of Relationship - Intermediation Platform',
+              title: '2. Nature of Relationship',
               content:
-                'CanisterTask is a gig economy intermediation platform. There is NO employment relationship between workers and clients, nor between workers and the platform. Each user is an independent service provider, responsible for their own tax obligations, social security, and insurance. The platform only facilitates connections between parties.',
+                'CanisterTask is a gig economy platform. No employment relationship exists between workers and clients. Each user is responsible for their tax obligations.',
             },
             {
-              icon: Euro,
-              title: '3. Payments and Platform Fee (7%)',
+              title: '3. User Obligations',
               content:
-                'CanisterTask charges a 7% fee on the value of each completed transaction. This fee is automatically deducted from the total payment. Example: €100 task → Worker receives €93, Platform receives €7. Payments are processed through smart contracts on ICP. We support ICP, ckBTC, and fiat conversions via regulated ramps (Stripe, MoonPay). All amounts are final after on-chain confirmation.',
+                'You must: be 18+ years old, provide truthful information, comply with local laws, and respect other users.',
             },
             {
-              icon: Scale,
-              title: '4. User Obligations',
+              title: '4. Payments',
               content:
-                'Workers must: (a) Provide accurate and up-to-date information; (b) Meet deadlines and requirements of accepted tasks; (c) Declare income to Portuguese tax authorities; (d) Maintain adequate insurance (liability, work accidents). Clients must: (a) Describe tasks clearly and accurately; (b) Pay the agreed amount after satisfactory completion; (c) Provide honest and constructive feedback.',
+                'Payments are processed via escrow smart contracts. The platform does not custody fiat funds. EU/PT regulated ramps handle fiat conversions.',
             },
             {
-              icon: Shield,
-              title: '5. Liability and Warranties',
+              title: '5. Limitation of Liability',
               content:
-                'The platform is provided "AS IS" without warranties. CanisterTask is not responsible for: (a) Quality or outcome of executed tasks; (b) Disputes between workers and clients; (c) Damages, losses or injuries during task execution; (d) Non-compliance with tax or legal obligations by users; (e) Financial losses from crypto fluctuations. Maximum liability limited to the platform fee amount of the transaction in question.',
+                'The platform is not responsible for: disputes between users, financial losses, or damages resulting from platform use.',
             },
             {
-              icon: Scale,
               title: '6. Dispute Resolution',
               content:
-                'In case of dispute: (1) Try to resolve directly with the other party through platform chat; (2) If unresolved, you can request platform mediation (non-binding); (3) Legal disputes will be resolved in Évora courts, Portugal, under Portuguese law. For consumer disputes, you can use the Consumer Arbitration Center.',
+                'Disputes are resolved via decentralized voting system. Decisions are final and binding.',
             },
             {
-              icon: FileText,
-              title: '7. EU Platform Work Directive Compliance',
+              title: '7. Termination',
               content:
-                'In compliance with the EU Platform Work Directive: (a) Full transparency about matching algorithms and pricing; (b) Right to explanation about automated decisions; (c) Fair account deactivation process (with prior notice and right of appeal); (d) Access to performance and rating data; (e) Data protection according to GDPR.',
-            },
-            {
-              icon: Ban,
-              title: '8. Suspension and Termination',
-              content:
-                'We may suspend or terminate accounts in case of: (a) Violation of these Terms of Service; (b) Fraudulent or illegal activity; (c) Abusive behavior or harassment; (d) Multiple substantiated complaints. You can close your account at any time through settings. Data will be retained according to Privacy Policy and legal obligations.',
+                'You may delete your account at any time. We reserve the right to suspend accounts that violate these terms.',
             },
           ],
         };
 
   return (
     <div className="container py-12">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-3xl">
         <h1 className="mb-8 text-4xl font-bold tracking-tight">{t('terms.title')}</h1>
 
-        <Alert variant="destructive" className="mb-8">
+        <Alert className="mb-8">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="font-medium">{content.disclaimer}</AlertDescription>
+          <AlertDescription className="font-semibold">{content.disclaimer}</AlertDescription>
         </Alert>
 
         <div className="space-y-6">
-          {content.sections.map((section, index) => {
-            const Icon = section.icon;
-            return (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon className="h-5 w-5 text-primary" />
-                    {section.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{section.content}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {content.sections.map((section, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>{section.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed text-muted-foreground">{section.content}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         <p className="mt-8 text-sm text-muted-foreground">

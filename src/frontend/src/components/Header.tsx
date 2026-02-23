@@ -2,7 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
-import { Moon, Sun, Globe, Menu, LogOut, LogIn, Loader2, Shield, Users } from 'lucide-react';
+import { Moon, Sun, Globe, Menu, LogOut, LogIn, Loader2, Shield } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useTranslation } from '../hooks/useTranslation';
 import { useIsCallerAdmin } from '../hooks/useQueries';
@@ -41,17 +41,13 @@ export default function Header() {
   const NavLinks = () => (
     <>
       <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
-        Home
+        {t('nav.home')}
       </Link>
       <Link to="/analytics" className="text-sm font-medium hover:text-primary transition-colors">
         Tasks
       </Link>
       <Link to="/perfil" className="text-sm font-medium hover:text-primary transition-colors">
         {t('nav.myProfile')}
-      </Link>
-      <Link to="/workers" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
-        <Users className="h-4 w-4" />
-        Workers
       </Link>
       {isAdmin && (
         <Link to="/admin" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">

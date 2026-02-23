@@ -1,251 +1,113 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Transform CanisterTask into Professional EU-Compliant PWA",
+  "title": "Add complete user profile page with stats, earnings, and task history",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Replace existing footer with professional EU-compliant footer containing branding, navigation, and platform information",
+      "summary": "Create 'My Profile' page at /perfil displaying authenticated user's complete worker profile with statistics, earnings, and recent task history",
       "acceptanceCriteria": [
-        "Footer displays 'CanisterTask - Gig Economy Soberana ICP' branding",
-        "Footer shows copyright '© 2026 Hermínio Coragem, Évora PT'",
-        "Navigation links include Home, Tasks, Perfil, Admin, Sobre, Privacidade, Termos, and Cookies",
-        "Platform information shows '7% fee' and 'ICP mainnet'",
-        "All placeholder content is removed"
+        "Profile page displays all worker statistics fetched from backend",
+        "Rating is auto-calculated based on completed tasks",
+        "Earnings display includes 7% platform fee indication",
+        "Recent tasks show with relative timestamps and completion status",
+        "Page is accessible only to authenticated users"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Footer.tsx",
+          "path": "frontend/src/pages/MyProfile.tsx",
+          "operation": "create",
+          "description": "Create My Profile page component that fetches and displays the authenticated user's complete worker profile including: name with icon, star rating with total completed tasks count, city location with 5km radius indicator, skills list (Photo/Delivery/Verification), hourly and per-task pricing, total earnings with 7% platform fee indication, today's earnings (default €0.00), completed tasks count with checkmark, pending tasks count with hourglass icon, and recent tasks list showing task name, completion status, payment amount, and relative timestamp (e.g., '2h ago', '1 day'). Use useGetCallerUserProfile hook to fetch profile data. Display loading states and handle errors. Show authentication gate if user is not logged in. Use Portuguese/English translations via useTranslation hook. Use shadcn/ui Card components for layout consistency."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update footer component to display professional branding 'CanisterTask - Gig Economy Soberana ICP', copyright '© 2026 Hermínio Coragem, Évora PT', navigation links [Home, Tasks, Perfil, Admin, Sobre, Privacidade, Termos, Cookies], and platform information 'Plataforma intermediação | 7% fee | ICP mainnet'. Remove all existing placeholder content and social media buttons."
+          "description": "Add route configuration for /perfil path pointing to MyProfile page component. Ensure route is positioned correctly in the routing structure and wrapped with authentication requirements."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Create GDPR-compliant privacy policy page with Portuguese and English content",
+      "summary": "Add 'Edit Profile' and 'Stats Analytics' action buttons to profile page for modifying profile information and viewing detailed analytics",
       "acceptanceCriteria": [
-        "Page accessible at /privacidade route",
-        "Content available in Portuguese and English",
-        "Covers GDPR requirements comprehensively",
-        "Addresses EU Platform Work Directive compliance",
-        "Includes sections on data collection, usage, sharing, user rights, and security"
+        "Edit Profile button navigates to settings or opens profile edit modal",
+        "Stats Analytics button navigates to analytics page or displays detailed stats"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/PrivacyPolicy.tsx",
+          "path": "frontend/src/pages/MyProfile.tsx",
           "operation": "modify",
-          "description": "Enhance existing privacy policy page with comprehensive GDPR-compliant content covering data collection, usage, sharing, user rights under GDPR, security measures, and EU Platform Work Directive compliance. Ensure both Portuguese and English translations are complete and accurate using the useTranslation hook."
-        },
-        {
-          "path": "frontend/src/hooks/useTranslation.ts",
-          "operation": "modify",
-          "description": "Add complete privacy policy translations for both Portuguese (pt) and English (en) covering all GDPR requirements, data collection practices, user rights, security measures, and EU Platform Work Directive compliance sections."
+          "description": "Add two action buttons to the profile page: 'Edit Profile' button that navigates to /settings route, and 'Stats Analytics' button that navigates to /analytics route. Position buttons prominently below the profile header section. Use shadcn/ui Button components with appropriate styling and icons. Implement navigation using TanStack Router's useNavigate hook."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Create comprehensive Terms of Service page compliant with gig economy regulations",
+      "summary": "Create public profile URLs at /perfil/[user-id] displaying any user's profile information viewable by authenticated users and accessible to admins",
       "acceptanceCriteria": [
-        "Page accessible at /termos route",
-        "Content compliant with EU gig economy regulations",
-        "Clearly states platform intermediation role",
-        "Specifies 7% platform fee",
-        "Includes sections on obligations, payments, liability, and dispute resolution"
+        "Public profile route accepts user-id parameter",
+        "Profile data loads for any valid user ID",
+        "Admin users can navigate to and view any user profile",
+        "Non-admin users can view profiles of other authenticated users"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/TermsOfService.tsx",
-          "operation": "modify",
-          "description": "Enhance existing terms of service page with comprehensive content covering user obligations, platform intermediation role, payment terms (7% fee), liability disclaimers, dispute resolution, and EU Platform Work Directive compliance. Ensure content is compliant with EU gig economy regulations."
-        },
-        {
-          "path": "frontend/src/hooks/useTranslation.ts",
-          "operation": "modify",
-          "description": "Add complete terms of service translations for both Portuguese (pt) and English (en) covering platform intermediation, 7% fee structure, user obligations, liability disclaimers, and dispute resolution procedures."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Create cookies policy page with consent management information",
-      "acceptanceCriteria": [
-        "Page accessible at /cookies route",
-        "Explains essential cookies usage",
-        "Provides consent management interface",
-        "Links to privacy policy"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/Cookies.tsx",
+          "path": "frontend/src/pages/PublicProfile.tsx",
           "operation": "create",
-          "description": "Create new Cookies page component at /cookies route explaining essential cookies usage, consent management options, and cookie types. Include links to privacy policy page and provide information in both Portuguese and English using useTranslation hook."
-        },
-        {
-          "path": "frontend/src/hooks/useTranslation.ts",
-          "operation": "modify",
-          "description": "Add cookies page translations for both Portuguese (pt) and English (en) covering essential cookies explanation, consent management information, and cookie policy details."
+          "description": "Create PublicProfile page component that displays any user's profile at route /perfil/$userId. Extract userId from route parameters using TanStack Router. Fetch profile data using getUserProfile backend method via a new React Query hook. Display profile information: name, rating, location, skills, pricing, and task counts (no earnings or private data). Show authentication gate if user is not logged in. Handle loading states and errors (e.g., user not found). Use authorization component's permission checks to verify access. Use Portuguese/English translations via useTranslation hook. Use shadcn/ui Card components for layout consistency."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Register /cookies route in the router configuration, mapping it to the new Cookies page component. Add route between existing legal pages (privacy and terms)."
+          "description": "Add dynamic route configuration for /perfil/$userId path pointing to PublicProfile page component. Ensure route handles userId parameter extraction and is wrapped with authentication requirements."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useGetUserProfile(userId: Principal) React Query hook that calls actor.getUserProfile(userId) to fetch public profile data for any user. Include proper error handling, loading states, and query key structure ['userProfile', userId.toString()]. Enable query only when actor is available and userId is provided."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Create about page describing CanisterTask mission and founder information",
+      "summary": "Update main navigation menu to include 'MEU PERFIL' (My Profile) link between 'Tasks' and 'Admin' in menu structure",
       "acceptanceCriteria": [
-        "Page accessible at /sobre route",
-        "Describes CanisterTask mission and platform purpose",
-        "Includes information about Hermínio Coragem",
-        "Mentions ICP blockchain foundation"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/About.tsx",
-          "operation": "modify",
-          "description": "Enhance existing About page with comprehensive information about CanisterTask mission as a sovereign ICP-based gig economy marketplace, platform purpose, information about founder Hermínio Coragem from Évora PT, and ICP blockchain foundation. Ensure content is available in both Portuguese and English using useTranslation hook."
-        },
-        {
-          "path": "frontend/src/hooks/useTranslation.ts",
-          "operation": "modify",
-          "description": "Add about page translations for both Portuguese (pt) and English (en) covering CanisterTask mission, platform purpose, founder information (Hermínio Coragem, Évora PT), and ICP blockchain foundation details."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Implement GDPR-compliant cookie consent banner with accept and configure options",
-      "acceptanceCriteria": [
-        "Cookie banner appears on first visit",
-        "Banner displays text 'Usamos cookies essenciais'",
-        "Two buttons present: 'Aceitar' and 'Configurar'",
-        "Banner dismisses and doesn't reappear after acceptance",
-        "Consent preference is stored locally",
-        "Configure button links to /cookies page"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/CookieConsentBanner.tsx",
-          "operation": "create",
-          "description": "Create GDPR-compliant cookie consent banner component that displays 'Usamos cookies essenciais' message on first visit. Include two buttons: 'Aceitar' (stores consent in localStorage and dismisses) and 'Configurar' (navigates to /cookies page). Store consent preference in localStorage to prevent banner from reappearing. Use useTranslation hook for multilingual support."
-        },
-        {
-          "path": "frontend/src/hooks/useTranslation.ts",
-          "operation": "modify",
-          "description": "Add cookie consent banner translations for both Portuguese (pt) and English (en) including 'Usamos cookies essenciais' message and button labels 'Aceitar' and 'Configurar'."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Import and render CookieConsentBanner component at the root level of the App component, ensuring it appears on all pages until consent is given."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Create professional worker profile cards with comprehensive information display",
-      "acceptanceCriteria": [
-        "Worker cards display avatar icon, name, and rating",
-        "Shows number of completed tasks in parentheses",
-        "Displays location with distance indicator",
-        "Shows hourly rate in euros",
-        "Lists skills/services offered",
-        "Shows total earnings (GAINHOS)",
-        "Displays last completed task with checkmark and timestamp",
-        "Includes 'Contratar' and 'Ver tasks' action buttons"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/WorkerCard.tsx",
-          "operation": "create",
-          "description": "Create professional WorkerCard component displaying worker profile information: avatar icon with name, star rating with completed task count (⭐4.8 (23 tasks)), location with distance (📍 Évora 5km), hourly rate (€/h), skills/services, total earnings (GAINHOS), last completed task with checkmark and timestamp, and action buttons 'Contratar' and 'Ver tasks'. Accept HumanWorkerProfile props and format data for display."
-        },
-        {
-          "path": "frontend/src/pages/Workers.tsx",
-          "operation": "create",
-          "description": "Create Workers page component displaying a grid of WorkerCard components. Fetch worker profiles and render them using the WorkerCard component. Include search/filter functionality for skills and location. Handle loading and empty states."
-        },
-        {
-          "path": "frontend/src/hooks/useTranslation.ts",
-          "operation": "modify",
-          "description": "Add workers page translations for both Portuguese (pt) and English (en) including labels for rating, tasks completed, location, hourly rate, skills, earnings (GAINHOS), last task, and button labels 'Contratar' and 'Ver tasks'."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register /workers route in the router configuration, mapping it to the new Workers page component. Add route at the main navigation level."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Update main navigation menu to include all required sections",
-      "acceptanceCriteria": [
-        "Navigation includes Home, Tasks, Meu Perfil, Workers, and Admin links",
-        "Workers link navigates to worker listings page",
-        "All links are functional and correctly routed",
-        "Admin link only visible to authorized users"
+        "Navigation menu displays 'MEU PERFIL' link in correct position",
+        "Link is visible to all authenticated users",
+        "Clicking the link navigates to /perfil route",
+        "Menu maintains responsive mobile behavior"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Update Header navigation menu to include all required links: Home, Tasks, Meu Perfil, Workers, and Admin. Ensure Workers link navigates to /workers route. Verify Admin link visibility is restricted to authorized users using isCallerAdmin check. Update link labels to match Portuguese naming (Meu Perfil instead of Profile)."
+          "description": "Add 'MEU PERFIL' navigation link to the Header component's main navigation menu. Position the link between 'Tasks' and 'Admin' links to match the required menu structure: Home | Tasks | MEU PERFIL | Admin. Ensure link navigates to /perfil route. Make link visible to all authenticated users. Maintain existing responsive mobile menu behavior. Use useTranslation hook for bilingual label support (Portuguese: 'MEU PERFIL', English: 'MY PROFILE'). Apply consistent styling with existing navigation items."
         },
         {
           "path": "frontend/src/hooks/useTranslation.ts",
           "operation": "modify",
-          "description": "Add or update navigation translations for both Portuguese (pt) and English (en) including 'Home', 'Tasks', 'Meu Perfil', 'Workers', and 'Admin' labels."
+          "description": "Add translation keys for 'myProfile' navigation label in both Portuguese ('MEU PERFIL') and English ('MY PROFILE') dictionaries under the navigation section. Ensure translations are accessible via the useTranslation hook."
         }
       ]
     },
     {
-      "id": "REQ-9",
-      "summary": "Ensure free trial test mode displays 7% platform fee calculation",
+      "id": "REQ-6",
+      "summary": "Ensure admin dashboard displays HCoragem platform earnings with active 7% platform fee clearly indicated",
       "acceptanceCriteria": [
-        "Test mode allows task simulation without real transactions",
-        "Completed test tasks show 7% platform fee deduction",
-        "Worker receives 93% of task value in test mode",
-        "Platform fee calculation is clearly displayed",
-        "Test mode statistics are tracked and displayed"
+        "Admin dashboard shows total platform earnings",
+        "7% fee is visibly marked as active",
+        "Earnings calculations reflect 7% commission rate"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useTestMode.ts",
+          "path": "frontend/src/pages/AdminDashboard.tsx",
           "operation": "modify",
-          "description": "Verify and enhance test mode logic to correctly calculate and display 7% platform fee deduction. Ensure worker receives 93% of task value. Update task simulation to clearly show platform fee calculation breakdown (task value, 7% fee, 93% worker earnings)."
+          "description": "Update AdminDashboard component to prominently display HCoragem platform earnings with clear 7% platform fee indication. Add a dedicated Card component showing total platform fees collected (fetched via getPlatformFeeTotal backend method if available, or calculated from totalRevenue in DashboardStats). Include visual indicator (badge or label) stating '7% Fee Active' or 'Taxa Ativa: 7%'. Position this earnings card prominently near the top of the dashboard. Use Portuguese/English translations via useTranslation hook. Ensure the fee percentage is visually distinct using color coding or typography."
         },
         {
-          "path": "frontend/src/components/TestModeStats.tsx",
+          "path": "frontend/src/hooks/useTranslation.ts",
           "operation": "modify",
-          "description": "Enhance TestModeStats component to display detailed breakdown of test mode transactions including total task value, 7% platform fee amount, and 93% worker earnings. Add visual indicators for fee calculation."
-        },
-        {
-          "path": "frontend/src/pages/WorkerDashboard.tsx",
-          "operation": "modify",
-          "description": "Ensure test mode task completion displays clear 7% platform fee calculation to users. Show breakdown of task value, platform fee (7%), and worker earnings (93%) in the UI when tasks are completed in test mode."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Add SEO meta tags optimized for target keywords",
-      "acceptanceCriteria": [
-        "HTML head includes meta description with 'gig economy ICP Portugal'",
-        "Keywords include 'IA contrata workers'",
-        "Open Graph tags present for social sharing",
-        "Twitter Card meta tags configured",
-        "Title tag optimized for target keywords"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/index.html",
-          "operation": "modify",
-          "description": "Update HTML head section with SEO-optimized meta tags. Add meta description including 'gig economy ICP Portugal' and 'IA contrata workers' keywords. Update title tag to include target keywords. Enhance existing Open Graph and Twitter Card meta tags with optimized content for social sharing. Add keywords meta tag with relevant terms."
+          "description": "Add translation keys for platform fee display in admin dashboard: 'platformFee' ('Taxa da Plataforma' / 'Platform Fee'), 'feeActive' ('Taxa Ativa: 7%' / 'Active Fee: 7%'), and 'totalPlatformEarnings' ('Ganhos Totais da Plataforma' / 'Total Platform Earnings') in both Portuguese and English dictionaries under the admin or dashboard section."
         }
       ]
     }

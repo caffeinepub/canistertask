@@ -154,7 +154,6 @@ export const idlService = IDL.Service({
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'acceptTask' : IDL.Func([IDL.Nat], [], []),
-  'activateTestMode' : IDL.Func([], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
   'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
@@ -224,7 +223,6 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
-  'isTestModeEnabled' : IDL.Func([], [IDL.Bool], ['query']),
   'markNotificationAsRead' : IDL.Func([IDL.Nat], [], []),
   'registerAiAgent' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'registerHumanWorker' : IDL.Func(
@@ -399,7 +397,6 @@ export const idlFactory = ({ IDL }) => {
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'acceptTask' : IDL.Func([IDL.Nat], [], []),
-    'activateTestMode' : IDL.Func([], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
     'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
@@ -473,7 +470,6 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
-    'isTestModeEnabled' : IDL.Func([], [IDL.Bool], ['query']),
     'markNotificationAsRead' : IDL.Func([IDL.Nat], [], []),
     'registerAiAgent' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'registerHumanWorker' : IDL.Func(

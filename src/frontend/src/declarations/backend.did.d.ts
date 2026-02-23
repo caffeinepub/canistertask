@@ -128,7 +128,6 @@ export interface _SERVICE {
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'acceptTask' : ActorMethod<[bigint], undefined>,
-  'activateTestMode' : ActorMethod<[], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'calculatePlatformFees' : ActorMethod<[], number>,
   'completeTaskPayment' : ActorMethod<[bigint, number], undefined>,
@@ -173,7 +172,6 @@ export interface _SERVICE {
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isStripeConfigured' : ActorMethod<[], boolean>,
-  'isTestModeEnabled' : ActorMethod<[], boolean>,
   'markNotificationAsRead' : ActorMethod<[bigint], undefined>,
   'registerAiAgent' : ActorMethod<[string, string], undefined>,
   'registerHumanWorker' : ActorMethod<

@@ -1,146 +1,86 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T17:39:32.686Z",
+  "generatedAt": "2026-02-23T17:16:03.640Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 10,
-    "implemented": 9,
+    "total": 6,
+    "implemented": 5,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Replace the existing footer with a professional footer containing: 'CanisterTask - Gig Economy Soberana ICP', '© 2026 Hermínio Coragem, Évora PT', navigation links to [Home] [Tasks] [Perfil] [Admin] | [Sobre] [Privacidade] [Termos] [Cookies], and platform information 'Plataforma intermediação | 7% fee | ICP mainnet'. Remove any placeholder content.",
+        "summary": "Create a new 'My Profile' page at route /perfil that displays the authenticated user's complete profile with worker statistics, including: user name with icon, star rating with total completed tasks count, city location with 5km radius indicator, skills list (Photo/Delivery/Verification), hourly rate and per-task rate pricing, total earnings with 7% platform fee indication, today's earnings (default €0.00), completed tasks count with checkmark, pending tasks count with hourglass icon, and recent tasks list showing task name, completion status, payment amount, and relative timestamp (e.g., '2h ago', '1 day')",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/pages/MyProfile.tsx",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Footer.tsx"
-        ]
-      },
-      {
-        "id": "REQ-10",
-        "summary": "Add SEO meta tags optimized for 'gig economy ICP Portugal' and 'IA contrata workers' to improve discoverability in search engines. Include relevant Open Graph and Twitter Card tags.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/index.html"
-        ],
-        "matchedFiles": [
-          "frontend/index.html"
+          "frontend/src/pages/MyProfile.tsx",
+          "frontend/src/App.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Create a complete GDPR-compliant privacy policy page at /privacidade with content in both Portuguese and English. The policy must cover data collection, usage, sharing, user rights under GDPR, security measures, and be compliant with EU Platform Work Directive requirements.",
+        "summary": "Add 'Edit Profile' and 'Stats Analytics' action buttons to the profile page that allow users to modify their profile information and view detailed analytics",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/PrivacyPolicy.tsx",
-          "frontend/src/hooks/useTranslation.ts"
+          "frontend/src/pages/MyProfile.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/PrivacyPolicy.tsx",
-          "frontend/src/hooks/useTranslation.ts"
+          "frontend/src/pages/MyProfile.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Create a comprehensive Terms of Service page at /termos that is compliant with gig economy regulations and EU Platform Work Directive. Include sections on user obligations, platform intermediation role, payment terms (7% fee), liability disclaimers, and dispute resolution.",
+        "summary": "Create public profile URLs at /perfil/[user-id] that display any user's profile information (name, rating, location, skills, pricing, task counts) viewable by all authenticated users and accessible to admin users to view all profiles",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/TermsOfService.tsx",
-          "frontend/src/hooks/useTranslation.ts"
+          "frontend/src/pages/PublicProfile.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/TermsOfService.tsx",
-          "frontend/src/hooks/useTranslation.ts"
+          "frontend/src/pages/PublicProfile.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Create a cookies page at /cookies with cookie policy information and consent management options. Include explanation of essential cookies used and user consent controls.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Cookies.tsx",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Cookies.tsx",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/App.tsx"
-        ]
+        "summary": "Add backend query method to retrieve user profile data including calculated rating from completed tasks, total earnings with 7% platform fee, today's earnings, completed and pending task counts, and recent task history with timestamps",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-5",
-        "summary": "Create an about page at /sobre describing the CanisterTask mission and information about Hermínio Coragem. Include the platform's purpose as a sovereign ICP-based gig economy marketplace.",
+        "summary": "Update the main navigation menu to include a new 'MEU PERFIL' (My Profile) link between 'Tasks' and 'Admin', resulting in the menu structure: Home | Tasks | MEU PERFIL | Admin",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/About.tsx",
+          "frontend/src/components/Header.tsx",
           "frontend/src/hooks/useTranslation.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/About.tsx",
+          "frontend/src/components/Header.tsx",
           "frontend/src/hooks/useTranslation.ts"
         ]
       },
       {
         "id": "REQ-6",
-        "summary": "Implement a GDPR-compliant cookie consent banner that appears on first visit with text 'Usamos cookies essenciais' and two buttons: [Aceitar] and [Configurar]. Store consent preference and prevent banner from showing again once accepted.",
+        "summary": "Ensure the admin dashboard displays HCoragem earnings with the active 7% platform fee clearly indicated",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/CookieConsentBanner.tsx",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/CookieConsentBanner.tsx",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Create professional worker profile cards displaying: worker name with avatar icon, star rating with number of completed tasks (e.g., ⭐4.8 (23 tasks)), location with distance (e.g., 📍 Évora 5km), hourly rate, skills/services offered, total earnings (GAINHOS), last completed task with timestamp, and action buttons [Contratar] and [Ver tasks]. Example: '👤 João Silva ⭐4.8 (23 tasks) 📍 Évora 5km | €12/h | Foto/Entrega/Verificação GAINHOS: €320 | ÚLTIMA: 'Foto loja X' ✓ 2h'",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WorkerCard.tsx",
-          "frontend/src/pages/Workers.tsx",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WorkerCard.tsx",
-          "frontend/src/pages/Workers.tsx",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Update the main navigation menu to include all sections: Home, Tasks, Meu Perfil, Workers, and Admin. Ensure Workers link navigates to a page displaying worker profile cards.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/Header.tsx",
+          "frontend/src/pages/AdminDashboard.tsx",
           "frontend/src/hooks/useTranslation.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/Header.tsx",
+          "frontend/src/pages/AdminDashboard.tsx",
           "frontend/src/hooks/useTranslation.ts"
         ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Ensure the free trial test mode functionality is working and displays a simulated 7% platform fee calculation when tasks are completed in test mode.",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/hooks/useTestMode.ts",
-          "frontend/src/components/TestModeStats.tsx",
-          "frontend/src/pages/WorkerDashboard.tsx"
-        ],
-        "matchedFiles": []
       }
     ]
   },
@@ -150,24 +90,17 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.html",
     "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/CookieConsentBanner.tsx",
-    "frontend/src/components/Footer.tsx",
-    "frontend/src/components/GDPRConsent.tsx",
     "frontend/src/components/Header.tsx",
-    "frontend/src/components/ProfileSetup.tsx",
-    "frontend/src/components/WorkerCard.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/hooks/useTranslation.ts",
-    "frontend/src/pages/About.tsx",
-    "frontend/src/pages/Cookies.tsx",
-    "frontend/src/pages/PrivacyPolicy.tsx",
-    "frontend/src/pages/TermsOfService.tsx",
-    "frontend/src/pages/Workers.tsx",
+    "frontend/src/pages/AdminDashboard.tsx",
+    "frontend/src/pages/MyProfile.tsx",
+    "frontend/src/pages/PublicProfile.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

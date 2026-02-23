@@ -229,7 +229,6 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     acceptTask(taskId: bigint): Promise<void>;
-    activateTestMode(): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     calculatePlatformFees(): Promise<number>;
     completeTaskPayment(taskId: bigint, _paymentAmount: number): Promise<void>;
@@ -266,7 +265,6 @@ export interface backendInterface {
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
-    isTestModeEnabled(): Promise<boolean>;
     markNotificationAsRead(notificationId: bigint): Promise<void>;
     registerAiAgent(agentName: string, description: string): Promise<void>;
     registerHumanWorker(name: string, skills: Array<Skill>, location: Location, price: number): Promise<void>;
@@ -390,20 +388,6 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.acceptTask(arg0);
-            return result;
-        }
-    }
-    async activateTestMode(): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.activateTestMode();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.activateTestMode();
             return result;
         }
     }
@@ -739,20 +723,6 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isStripeConfigured();
-            return result;
-        }
-    }
-    async isTestModeEnabled(): Promise<boolean> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.isTestModeEnabled();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.isTestModeEnabled();
             return result;
         }
     }

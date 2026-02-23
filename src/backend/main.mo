@@ -27,7 +27,6 @@ actor {
   var stripeConfig : ?Stripe.StripeConfiguration = null;
   let PLATFORM_FEE_PERCENTAGE : Float = 0.07;
   var platformFeeWallet : ?Principal = null;
-  var testMode : Bool = false;
 
   type PushNotification = {
     id : Nat;
@@ -232,20 +231,6 @@ actor {
       Runtime.trap("Unauthorized: Only users can create checkout sessions");
     };
     await Stripe.createCheckoutSession(getStripeConfiguration(), caller, items, successUrl, cancelUrl, transform);
-  };
-
-  public shared ({ caller }) func activateTestMode() : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can enable test mode");
-    };
-    testMode := true;
-  };
-
-  public query ({ caller }) func isTestModeEnabled() : async Bool {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can check test mode status");
-    };
-    testMode;
   };
 
   public query ({ caller }) func getTodayAdminStats() : async {

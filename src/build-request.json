@@ -1,224 +1,136 @@
 {
   "kind": "build_request",
-  "title": "Transform CanisterTask into Professional EU-Compliant PWA",
+  "title": "Add complete user profile page with stats, earnings, and task history",
   "projectName": "CanisterTask",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Replace the existing footer with a professional footer containing: 'CanisterTask - Gig Economy Soberana ICP', '© 2026 Hermínio Coragem, Évora PT', navigation links to [Home] [Tasks] [Perfil] [Admin] | [Sobre] [Privacidade] [Termos] [Cookies], and platform information 'Plataforma intermediação | 7% fee | ICP mainnet'. Remove any placeholder content.",
+      "text": "Create a new 'My Profile' page at route /perfil that displays the authenticated user's complete profile with worker statistics, including: user name with icon, star rating with total completed tasks count, city location with 5km radius indicator, skills list (Photo/Delivery/Verification), hourly rate and per-task rate pricing, total earnings with 7% platform fee indication, today's earnings (default €0.00), completed tasks count with checkmark, pending tasks count with hourglass icon, and recent tasks list showing task name, completion status, payment amount, and relative timestamp (e.g., '2h ago', '1 day')",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "RODAPÉ PROFISSIONAL (remover placeholders): CanisterTask - Gig Economy Soberana ICP © 2026 Hermínio Coragem, Évora PT[Home] [Tasks] [Perfil] [Admin] | [Sobre] [Privacidade] [Termos] [Cookies] Plataforma intermediação | 7% fee | ICP mainnet"
+          "**PÁGINA 'MEU PERFIL'** (menu: Home | Tasks | MEU PERFIL | Admin)",
+          "**MODELO WORKER:**\n👤 [Nome User]\n⭐ [Rating] ([Total Tasks]) | 📍 [Cidade 5km]\nSKILLS: [Foto/Entrega/Verificação]\n💰 €[preço]/h | €[preço]/task\nGAINHOS: €[total] | HOJE: €0,00\nTASKS: [completas] ✓ | [pendentes] ⏳\nÚLTIMAS TASKS:\n'Foto loja X' ✓ €15 (2h atrás)\n'Entrega Y' ✓ €20 (1dia)"
         ]
       },
       "acceptanceCriteria": [
-        "Footer displays 'CanisterTask - Gig Economy Soberana ICP' branding",
-        "Footer shows copyright '© 2026 Hermínio Coragem, Évora PT'",
-        "Navigation links include Home, Tasks, Perfil, Admin, Sobre, Privacidade, Termos, and Cookies",
-        "Platform information shows '7% fee' and 'ICP mainnet'",
-        "All placeholder content is removed"
+        "Profile page displays all worker statistics fetched from backend",
+        "Rating is auto-calculated based on completed tasks",
+        "Earnings display includes 7% platform fee indication",
+        "Recent tasks show with relative timestamps and completion status",
+        "Page is accessible only to authenticated users"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Create a complete GDPR-compliant privacy policy page at /privacidade with content in both Portuguese and English. The policy must cover data collection, usage, sharing, user rights under GDPR, security measures, and be compliant with EU Platform Work Directive requirements.",
+      "text": "Add 'Edit Profile' and 'Stats Analytics' action buttons to the profile page that allow users to modify their profile information and view detailed analytics",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "/privacidade: GDPR completo PT/EN"
+          "[Editar Perfil] [Stats Analytics]"
         ]
       },
       "acceptanceCriteria": [
-        "Page accessible at /privacidade route",
-        "Content available in Portuguese and English",
-        "Covers GDPR requirements comprehensively",
-        "Addresses EU Platform Work Directive compliance",
-        "Includes sections on data collection, usage, sharing, user rights, and security"
+        "Edit Profile button navigates to settings or opens profile edit modal",
+        "Stats Analytics button navigates to analytics page or displays detailed stats"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Create a comprehensive Terms of Service page at /termos that is compliant with gig economy regulations and EU Platform Work Directive. Include sections on user obligations, platform intermediation role, payment terms (7% fee), liability disclaimers, and dispute resolution.",
-      "target": "frontend",
+      "text": "Create public profile URLs at /perfil/[user-id] that display any user's profile information (name, rating, location, skills, pricing, task counts) viewable by all authenticated users and accessible to admin users to view all profiles",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "/termos: ToS gig economy compliant"
+          "URL: /perfil/[user-id] público",
+          "Admin vê todos perfis"
         ]
       },
       "acceptanceCriteria": [
-        "Page accessible at /termos route",
-        "Content compliant with EU gig economy regulations",
-        "Clearly states platform intermediation role",
-        "Specifies 7% platform fee",
-        "Includes sections on obligations, payments, liability, and dispute resolution"
+        "Public profile route accepts user-id parameter",
+        "Profile data loads for any valid user ID",
+        "Admin users can navigate to and view any user profile",
+        "Non-admin users can view profiles of other authenticated users"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Create a cookies page at /cookies with cookie policy information and consent management options. Include explanation of essential cookies used and user consent controls.",
-      "target": "frontend",
+      "text": "Add backend query method to retrieve user profile data including calculated rating from completed tasks, total earnings with 7% platform fee, today's earnings, completed and pending task counts, and recent task history with timestamps",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "/cookies: Cookie banner + consentimento"
+          "Rating auto-calculado tasks completas",
+          "Ganhos 7% mostrados"
         ]
       },
       "acceptanceCriteria": [
-        "Page accessible at /cookies route",
-        "Explains essential cookies usage",
-        "Provides consent management interface",
-        "Links to privacy policy"
+        "Backend method calculates rating based on completed tasks",
+        "Earnings calculations include 7% platform fee tracking",
+        "Recent tasks are returned with relative timestamp data",
+        "Query method is accessible by authenticated users for their own profile and by admin for any profile"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Create an about page at /sobre describing the CanisterTask mission and information about Hermínio Coragem. Include the platform's purpose as a sovereign ICP-based gig economy marketplace.",
+      "text": "Update the main navigation menu to include a new 'MEU PERFIL' (My Profile) link between 'Tasks' and 'Admin', resulting in the menu structure: Home | Tasks | MEU PERFIL | Admin",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "/sobre: Missão CanisterTask + HCoragem"
+          "**MENU ATUALIZADO**: Home | Tasks | MEU PERFIL | Admin"
         ]
       },
       "acceptanceCriteria": [
-        "Page accessible at /sobre route",
-        "Describes CanisterTask mission and platform purpose",
-        "Includes information about Hermínio Coragem",
-        "Mentions ICP blockchain foundation"
+        "Navigation menu displays 'MEU PERFIL' link in correct position",
+        "Link is visible to all authenticated users",
+        "Clicking the link navigates to /perfil route",
+        "Menu maintains responsive mobile behavior"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Implement a GDPR-compliant cookie consent banner that appears on first visit with text 'Usamos cookies essenciais' and two buttons: [Aceitar] and [Configurar]. Store consent preference and prevent banner from showing again once accepted.",
+      "text": "Ensure the admin dashboard displays HCoragem earnings with the active 7% platform fee clearly indicated",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "COOKIE BANNER (obrigatório GDPR): 'Usamos cookies essenciais. [Aceitar] [Configurar]'"
+          "7% FEE ativa. Dashboard ganhos HCoragem."
         ]
       },
       "acceptanceCriteria": [
-        "Cookie banner appears on first visit",
-        "Banner displays text 'Usamos cookies essenciais'",
-        "Two buttons present: 'Aceitar' and 'Configurar'",
-        "Banner dismisses and doesn't reappear after acceptance",
-        "Consent preference is stored locally",
-        "Configure button links to /cookies page"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Create professional worker profile cards displaying: worker name with avatar icon, star rating with number of completed tasks (e.g., ⭐4.8 (23 tasks)), location with distance (e.g., 📍 Évora 5km), hourly rate, skills/services offered, total earnings (GAINHOS), last completed task with timestamp, and action buttons [Contratar] and [Ver tasks]. Example: '👤 João Silva ⭐4.8 (23 tasks) 📍 Évora 5km | €12/h | Foto/Entrega/Verificação GAINHOS: €320 | ÚLTIMA: 'Foto loja X' ✓ 2h'",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "PERFIS WORKERS PROFISSIONAIS: 👤 João Silva ⭐4.8 (23 tasks) 📍 Évora 5km | €12/h | Foto/Entrega/Verificação GAINHOS: €320 | ÚLTIMA: 'Foto loja X' ✓ 2h [Contratar] [Ver tasks]"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Worker cards display avatar icon, name, and rating",
-        "Shows number of completed tasks in parentheses",
-        "Displays location with distance indicator",
-        "Shows hourly rate in euros",
-        "Lists skills/services offered",
-        "Shows total earnings (GAINHOS)",
-        "Displays last completed task with checkmark and timestamp",
-        "Includes 'Contratar' and 'Ver tasks' action buttons"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Update the main navigation menu to include all sections: Home, Tasks, Meu Perfil, Workers, and Admin. Ensure Workers link navigates to a page displaying worker profile cards.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "MENU COMPLETO: Home | Tasks | Meu Perfil | Workers | Admin"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Navigation includes Home, Tasks, Meu Perfil, Workers, and Admin links",
-        "Workers link navigates to worker listings page",
-        "All links are functional and correctly routed",
-        "Admin link only visible to authorized users"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Ensure the free trial test mode functionality is working and displays a simulated 7% platform fee calculation when tasks are completed in test mode.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "TESTE GRÁTIS funcionando + 7% fee simulada"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Test mode allows task simulation without real transactions",
-        "Completed test tasks show 7% platform fee deduction",
-        "Worker receives 93% of task value in test mode",
-        "Platform fee calculation is clearly displayed",
-        "Test mode statistics are tracked and displayed"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Add SEO meta tags optimized for 'gig economy ICP Portugal' and 'IA contrata workers' to improve discoverability in search engines. Include relevant Open Graph and Twitter Card tags.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "META TAGS SEO: 'gig economy ICP Portugal', 'IA contrata workers'"
-        ]
-      },
-      "acceptanceCriteria": [
-        "HTML head includes meta description with 'gig economy ICP Portugal'",
-        "Keywords include 'IA contrata workers'",
-        "Open Graph tags present for social sharing",
-        "Twitter Card meta tags configured",
-        "Title tag optimized for target keywords"
+        "Admin dashboard shows total platform earnings",
+        "7% fee is visibly marked as active",
+        "Earnings calculations reflect 7% commission rate"
       ]
     }
   ],
   "constraints": [
-    "Must comply with GDPR and EU Platform Work Directive requirements",
-    "Maintain existing single-actor Motoko backend architecture",
-    "Preserve existing authentication flow using Internet Identity",
-    "Do not modify read-only files in frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui directory",
-    "Keep 7% platform fee structure consistent across all features"
+    "Maintain single-actor backend architecture in backend/main.mo",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
+    "Use existing authentication and profile hooks from frontend/src/hooks",
+    "Preserve Portuguese/English bilingual support using useTranslation hook"
   ],
   "nonGoals": [
-    "Implementing real payment processing beyond existing Stripe integration",
-    "Adding third-party authentication providers beyond Internet Identity",
-    "Creating mobile native applications",
-    "Implementing real-time WebSocket features",
-    "Adding email notification services"
+    "Implementing profile photo upload functionality",
+    "Adding social sharing features to profiles",
+    "Creating profile comparison or ranking features",
+    "Implementing private messaging between users"
   ],
   "imageRequirements": {
     "required": [],
