@@ -1,9 +1,12 @@
-import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
+import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
-import AuthGate from './components/AuthGate';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import AuthGate from './components/AuthGate';
+import AgeGate from './components/AgeGate';
+import ProfileSetup from './components/ProfileSetup';
 import WorkerDashboard from './pages/WorkerDashboard';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
@@ -12,13 +15,30 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailure from './pages/PaymentFailure';
+import AdminDashboard from './pages/AdminDashboard';
+import Notifications from './pages/Notifications';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div id="router-outlet" />
+        <AuthGate>
+          <AgeGate>
+            <ProfileSetup>
+              <Outlet />
+            </ProfileSetup>
+          </AgeGate>
+        </AuthGate>
       </main>
       <Footer />
     </div>
@@ -32,6 +52,12 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  component: WorkerDashboard,
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dashboard',
   component: WorkerDashboard,
 });
 
@@ -55,13 +81,13 @@ const aboutRoute = createRoute({
 
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/privacy-policy',
+  path: '/privacy',
   component: PrivacyPolicy,
 });
 
 const termsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/terms-of-service',
+  path: '/terms',
   component: TermsOfService,
 });
 
@@ -77,8 +103,21 @@ const paymentFailureRoute = createRoute({
   component: PaymentFailure,
 });
 
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: AdminDashboard,
+});
+
+const notificationsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/notifications',
+  component: Notifications,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  dashboardRoute,
   analyticsRoute,
   settingsRoute,
   aboutRoute,
@@ -86,6 +125,8 @@ const routeTree = rootRoute.addChildren([
   termsRoute,
   paymentSuccessRoute,
   paymentFailureRoute,
+  adminRoute,
+  notificationsRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -99,10 +140,10 @@ declare module '@tanstack/react-router' {
 export default function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <AuthGate>
+      <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <Toaster />
-      </AuthGate>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

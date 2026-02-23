@@ -62,10 +62,10 @@ export default function AuthGate({ children }: AuthGateProps) {
   }
 
   return (
-    <>
-      <AgeGate />
-      <ProfileSetup />
-      {children}
-    </>
+    <AgeGate>
+      <ProfileSetup>
+        {children}
+      </ProfileSetup>
+    </AgeGate>
   );
 }

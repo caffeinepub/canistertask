@@ -99,6 +99,11 @@ export interface TransformationOutput {
     body: Uint8Array;
     headers: Array<http_header>;
 }
+export interface DailyStats {
+    date: bigint;
+    totalFees: number;
+    taskCount: bigint;
+}
 export interface AiAgentClientProfile {
     principal: Principal;
     createdAt: bigint;
@@ -123,6 +128,13 @@ export interface HumanWorkerProfile {
     skills: Array<Skill>;
     location: Location;
 }
+export interface DashboardStats {
+    totalTasks: bigint;
+    totalPlatformFees: number;
+    completedTasks: bigint;
+    activeWorkers: bigint;
+    totalRevenue: number;
+}
 export interface http_header {
     value: string;
     name: string;
@@ -131,6 +143,13 @@ export interface http_request_result {
     status: bigint;
     body: Uint8Array;
     headers: Array<http_header>;
+}
+export interface DailySummary {
+    day: bigint;
+    completedAmount: number;
+    completedTasks: bigint;
+    taskCount: bigint;
+    totalAmount: number;
 }
 export interface ShoppingItem {
     productName: string;
@@ -158,6 +177,14 @@ export type Skill = {
 export interface TransformationInput {
     context: Uint8Array;
     response: http_request_result;
+}
+export interface PushNotification {
+    id: bigint;
+    workerId: Principal;
+    taskDetails: string;
+    isRead: boolean;
+    taskId: bigint;
+    timestamp: bigint;
 }
 export type StripeSessionStatus = {
     __kind__: "completed";
@@ -202,21 +229,40 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    calculatePlatformFees(): Promise<number>;
+    completeTaskPayment(taskId: bigint, paymentAmount: number): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     createTask(taskType: string, details: string, duration: string, price: number, location: Location): Promise<bigint>;
+    getAllNotifications(): Promise<Array<PushNotification>>;
     getAndUpdateCurrentPrice(): Promise<{
         currency?: string;
         price: number;
     }>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getDailyEarningsStats(from: bigint, to: bigint): Promise<Array<DailyStats>>;
+    getDailySummary(): Promise<{
+        day: bigint;
+        completedAmount: number;
+        completedTasks: bigint;
+        taskCount: bigint;
+        totalAmount: number;
+    }>;
+    getDashboardStats(): Promise<DashboardStats>;
+    getLast7DaysStats(): Promise<Array<DailySummary>>;
+    getPlatformFeeTotal(): Promise<number>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
+    getUnreadNotifications(): Promise<Array<PushNotification>>;
+    getUnreadNotificationsCount(): Promise<bigint>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
+    markNotificationAsRead(notificationId: bigint): Promise<void>;
     registerAiAgent(agentName: string, description: string): Promise<void>;
     registerHumanWorker(name: string, skills: Array<Skill>, location: Location, price: number): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    search(skills: Array<string>, lat: number, lon: number): Promise<Array<HumanWorkerProfile>>;
+    setPlatformFeeWallet(wallet: Principal): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     transform(input: TransformationInput): Promise<TransformationOutput>;
     updateHumanWorkerProfile(name: string, skills: Array<Skill>, location: Location, price: number): Promise<void>;
@@ -337,6 +383,34 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async calculatePlatformFees(): Promise<number> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.calculatePlatformFees();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.calculatePlatformFees();
+            return result;
+        }
+    }
+    async completeTaskPayment(arg0: bigint, arg1: number): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.completeTaskPayment(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.completeTaskPayment(arg0, arg1);
+            return result;
+        }
+    }
     async createCheckoutSession(arg0: Array<ShoppingItem>, arg1: string, arg2: string): Promise<string> {
         if (this.processError) {
             try {
@@ -362,6 +436,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.createTask(arg0, arg1, arg2, arg3, arg4);
+            return result;
+        }
+    }
+    async getAllNotifications(): Promise<Array<PushNotification>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllNotifications();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllNotifications();
             return result;
         }
     }
@@ -410,6 +498,82 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n24(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getDailyEarningsStats(arg0: bigint, arg1: bigint): Promise<Array<DailyStats>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getDailyEarningsStats(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getDailyEarningsStats(arg0, arg1);
+            return result;
+        }
+    }
+    async getDailySummary(): Promise<{
+        day: bigint;
+        completedAmount: number;
+        completedTasks: bigint;
+        taskCount: bigint;
+        totalAmount: number;
+    }> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getDailySummary();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getDailySummary();
+            return result;
+        }
+    }
+    async getDashboardStats(): Promise<DashboardStats> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getDashboardStats();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getDashboardStats();
+            return result;
+        }
+    }
+    async getLast7DaysStats(): Promise<Array<DailySummary>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getLast7DaysStats();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getLast7DaysStats();
+            return result;
+        }
+    }
+    async getPlatformFeeTotal(): Promise<number> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getPlatformFeeTotal();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getPlatformFeeTotal();
+            return result;
+        }
+    }
     async getStripeSessionStatus(arg0: string): Promise<StripeSessionStatus> {
         if (this.processError) {
             try {
@@ -422,6 +586,34 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getStripeSessionStatus(arg0);
             return from_candid_StripeSessionStatus_n26(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getUnreadNotifications(): Promise<Array<PushNotification>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getUnreadNotifications();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getUnreadNotifications();
+            return result;
+        }
+    }
+    async getUnreadNotificationsCount(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getUnreadNotificationsCount();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getUnreadNotificationsCount();
+            return result;
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
@@ -466,6 +658,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async markNotificationAsRead(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.markNotificationAsRead(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.markNotificationAsRead(arg0);
+            return result;
+        }
+    }
     async registerAiAgent(arg0: string, arg1: string): Promise<void> {
         if (this.processError) {
             try {
@@ -505,6 +711,34 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n32(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async search(arg0: Array<string>, arg1: number, arg2: number): Promise<Array<HumanWorkerProfile>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.search(arg0, arg1, arg2);
+                return from_candid_vec_n37(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.search(arg0, arg1, arg2);
+            return from_candid_vec_n37(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async setPlatformFeeWallet(arg0: Principal): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.setPlatformFeeWallet(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.setPlatformFeeWallet(arg0);
             return result;
         }
     }
@@ -782,6 +1016,9 @@ function from_candid_variant_n27(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }
 function from_candid_vec_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Skill>): Array<Skill> {
     return value.map((x)=>from_candid_Skill_n21(_uploadFile, _downloadFile, x));
+}
+function from_candid_vec_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_HumanWorkerProfile>): Array<HumanWorkerProfile> {
+    return value.map((x)=>from_candid_HumanWorkerProfile_n17(_uploadFile, _downloadFile, x));
 }
 function to_candid_HumanWorkerProfile_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: HumanWorkerProfile): _HumanWorkerProfile {
     return to_candid_record_n35(_uploadFile, _downloadFile, value);

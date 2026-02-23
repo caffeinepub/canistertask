@@ -2,11 +2,13 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
-import { Moon, Sun, Globe, Menu, LogOut, LogIn, Loader2 } from 'lucide-react';
+import { Moon, Sun, Globe, Menu, LogOut, LogIn, Loader2, Shield } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useTranslation } from '../hooks/useTranslation';
+import { useIsCallerAdmin } from '../hooks/useQueries';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import NotificationBell from './NotificationBell';
 
 export default function Header() {
   const { identity, login, clear, isLoggingIn } = useInternetIdentity();
@@ -14,6 +16,7 @@ export default function Header() {
   const { theme, setTheme } = useTheme();
   const { language, setLanguage, t } = useTranslation();
   const navigate = useNavigate();
+  const { data: isAdmin } = useIsCallerAdmin();
 
   const isAuthenticated = !!identity;
 
@@ -35,36 +38,54 @@ export default function Header() {
     }
   };
 
-  const navLinks = [
-    { to: '/', label: t('nav.dashboard') },
-    { to: '/analytics', label: t('nav.analytics') },
-    { to: '/settings', label: t('nav.settings') },
-    { to: '/about', label: t('nav.about') },
-  ];
+  const NavLinks = () => (
+    <>
+      <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+        {t('nav.dashboard')}
+      </Link>
+      <Link to="/analytics" className="text-sm font-medium hover:text-primary transition-colors">
+        {t('nav.analytics')}
+      </Link>
+      <Link to="/settings" className="text-sm font-medium hover:text-primary transition-colors">
+        {t('nav.settings')}
+      </Link>
+      <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
+        {t('nav.about')}
+      </Link>
+      {isAdmin && (
+        <Link to="/admin" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+          <Shield className="h-4 w-4" />
+          Admin
+        </Link>
+      )}
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-3">
-            <img src="/assets/generated/canistertask-icon.dim_512x512.png" alt="CanisterTask" className="h-10 w-10 rounded-lg" />
-            <span className="hidden text-xl font-bold sm:inline-block">CanisterTask</span>
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
+              <img 
+                src="/assets/generated/canistertask-icon.dim_512x512.png" 
+                alt="CanisterTask" 
+                className="h-8 w-8"
+              />
+              <span className="font-bold text-xl">CanisterTask</span>
+              <span className="text-xs font-semibold text-primary px-2 py-0.5 rounded-full bg-primary/10">
+                HCoragem
+              </span>
+            </div>
           </Link>
-
-          <nav className="hidden items-center gap-1 md:flex">
-            {navLinks.map((link) => (
-              <Link key={link.to} to={link.to}>
-                {({ isActive }) => (
-                  <Button variant={isActive ? 'default' : 'ghost'} size="sm">
-                    {link.label}
-                  </Button>
-                )}
-              </Link>
-            ))}
+          <nav className="hidden md:flex items-center gap-6">
+            <NavLinks />
           </nav>
         </div>
 
         <div className="flex items-center gap-2">
+          {isAuthenticated && <NotificationBell />}
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -72,17 +93,31 @@ export default function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setLanguage('pt')}>Português</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLanguage('en')}>English</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage('pt')}>
+                🇵🇹 Português
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage('en')}>
+                🇬🇧 English
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
 
-          <Button onClick={handleAuth} disabled={isLoggingIn} variant={isAuthenticated ? 'outline' : 'default'} className="hidden sm:flex">
+          <Button
+            onClick={handleAuth}
+            disabled={isLoggingIn}
+            variant={isAuthenticated ? 'outline' : 'default'}
+            size="sm"
+            className="hidden md:flex"
+          >
             {isLoggingIn ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -107,18 +142,15 @@ export default function Header() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent>
-              <nav className="flex flex-col gap-4 pt-8">
-                {navLinks.map((link) => (
-                  <Link key={link.to} to={link.to}>
-                    {({ isActive }) => (
-                      <Button variant={isActive ? 'default' : 'ghost'} className="w-full justify-start">
-                        {link.label}
-                      </Button>
-                    )}
-                  </Link>
-                ))}
-                <Button onClick={handleAuth} disabled={isLoggingIn} variant={isAuthenticated ? 'outline' : 'default'} className="w-full">
+            <SheetContent side="right">
+              <nav className="flex flex-col gap-4 mt-8">
+                <NavLinks />
+                <Button
+                  onClick={handleAuth}
+                  disabled={isLoggingIn}
+                  variant={isAuthenticated ? 'outline' : 'default'}
+                  className="w-full"
+                >
                   {isLoggingIn ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

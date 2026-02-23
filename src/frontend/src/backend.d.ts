@@ -17,6 +17,11 @@ export interface TransformationOutput {
     body: Uint8Array;
     headers: Array<http_header>;
 }
+export interface DailyStats {
+    date: bigint;
+    totalFees: number;
+    taskCount: bigint;
+}
 export interface AiAgentClientProfile {
     principal: Principal;
     createdAt: bigint;
@@ -34,6 +39,13 @@ export interface HumanWorkerProfile {
     skills: Array<Skill>;
     location: Location;
 }
+export interface DashboardStats {
+    totalTasks: bigint;
+    totalPlatformFees: number;
+    completedTasks: bigint;
+    activeWorkers: bigint;
+    totalRevenue: number;
+}
 export interface http_header {
     value: string;
     name: string;
@@ -42,6 +54,13 @@ export interface http_request_result {
     status: bigint;
     body: Uint8Array;
     headers: Array<http_header>;
+}
+export interface DailySummary {
+    day: bigint;
+    completedAmount: number;
+    completedTasks: bigint;
+    taskCount: bigint;
+    totalAmount: number;
 }
 export interface ShoppingItem {
     productName: string;
@@ -69,6 +88,14 @@ export type Skill = {
 export interface TransformationInput {
     context: Uint8Array;
     response: http_request_result;
+}
+export interface PushNotification {
+    id: bigint;
+    workerId: Principal;
+    taskDetails: string;
+    isRead: boolean;
+    taskId: bigint;
+    timestamp: bigint;
 }
 export type StripeSessionStatus = {
     __kind__: "completed";
@@ -102,21 +129,40 @@ export enum Variant_aiAgent_humanWorker {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    calculatePlatformFees(): Promise<number>;
+    completeTaskPayment(taskId: bigint, paymentAmount: number): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     createTask(taskType: string, details: string, duration: string, price: number, location: Location): Promise<bigint>;
+    getAllNotifications(): Promise<Array<PushNotification>>;
     getAndUpdateCurrentPrice(): Promise<{
         currency?: string;
         price: number;
     }>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getDailyEarningsStats(from: bigint, to: bigint): Promise<Array<DailyStats>>;
+    getDailySummary(): Promise<{
+        day: bigint;
+        completedAmount: number;
+        completedTasks: bigint;
+        taskCount: bigint;
+        totalAmount: number;
+    }>;
+    getDashboardStats(): Promise<DashboardStats>;
+    getLast7DaysStats(): Promise<Array<DailySummary>>;
+    getPlatformFeeTotal(): Promise<number>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
+    getUnreadNotifications(): Promise<Array<PushNotification>>;
+    getUnreadNotificationsCount(): Promise<bigint>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
+    markNotificationAsRead(notificationId: bigint): Promise<void>;
     registerAiAgent(agentName: string, description: string): Promise<void>;
     registerHumanWorker(name: string, skills: Array<Skill>, location: Location, price: number): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    search(skills: Array<string>, lat: number, lon: number): Promise<Array<HumanWorkerProfile>>;
+    setPlatformFeeWallet(wallet: Principal): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     transform(input: TransformationInput): Promise<TransformationOutput>;
     updateHumanWorkerProfile(name: string, skills: Array<Skill>, location: Location, price: number): Promise<void>;

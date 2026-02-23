@@ -36,6 +36,14 @@ export const Location = IDL.Record({
   'lon' : IDL.Float64,
   'radius' : IDL.Float64,
 });
+export const PushNotification = IDL.Record({
+  'id' : IDL.Nat,
+  'workerId' : IDL.Principal,
+  'taskDetails' : IDL.Text,
+  'isRead' : IDL.Bool,
+  'taskId' : IDL.Nat,
+  'timestamp' : IDL.Int,
+});
 export const AiAgentClientProfile = IDL.Record({
   'principal' : IDL.Principal,
   'createdAt' : IDL.Int,
@@ -67,6 +75,25 @@ export const UserProfile = IDL.Record({
     'aiAgent' : IDL.Null,
     'humanWorker' : IDL.Null,
   }),
+});
+export const DailyStats = IDL.Record({
+  'date' : IDL.Int,
+  'totalFees' : IDL.Float64,
+  'taskCount' : IDL.Nat,
+});
+export const DashboardStats = IDL.Record({
+  'totalTasks' : IDL.Nat,
+  'totalPlatformFees' : IDL.Float64,
+  'completedTasks' : IDL.Nat,
+  'activeWorkers' : IDL.Nat,
+  'totalRevenue' : IDL.Float64,
+});
+export const DailySummary = IDL.Record({
+  'day' : IDL.Int,
+  'completedAmount' : IDL.Float64,
+  'completedTasks' : IDL.Nat,
+  'taskCount' : IDL.Nat,
+  'totalAmount' : IDL.Float64,
 });
 export const StripeSessionStatus = IDL.Variant({
   'completed' : IDL.Record({
@@ -127,6 +154,8 @@ export const idlService = IDL.Service({
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
+  'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
   'createCheckoutSession' : IDL.Func(
       [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
       [IDL.Text],
@@ -137,6 +166,7 @@ export const idlService = IDL.Service({
       [IDL.Nat],
       [],
     ),
+  'getAllNotifications' : IDL.Func([], [IDL.Vec(PushNotification)], ['query']),
   'getAndUpdateCurrentPrice' : IDL.Func(
       [],
       [IDL.Record({ 'currency' : IDL.Opt(IDL.Text), 'price' : IDL.Float64 })],
@@ -144,7 +174,34 @@ export const idlService = IDL.Service({
     ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getDailyEarningsStats' : IDL.Func(
+      [IDL.Int, IDL.Int],
+      [IDL.Vec(DailyStats)],
+      ['query'],
+    ),
+  'getDailySummary' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'day' : IDL.Int,
+          'completedAmount' : IDL.Float64,
+          'completedTasks' : IDL.Nat,
+          'taskCount' : IDL.Nat,
+          'totalAmount' : IDL.Float64,
+        }),
+      ],
+      ['query'],
+    ),
+  'getDashboardStats' : IDL.Func([], [DashboardStats], ['query']),
+  'getLast7DaysStats' : IDL.Func([], [IDL.Vec(DailySummary)], ['query']),
+  'getPlatformFeeTotal' : IDL.Func([], [IDL.Float64], ['query']),
   'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+  'getUnreadNotifications' : IDL.Func(
+      [],
+      [IDL.Vec(PushNotification)],
+      ['query'],
+    ),
+  'getUnreadNotificationsCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
@@ -152,6 +209,7 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+  'markNotificationAsRead' : IDL.Func([IDL.Nat], [], []),
   'registerAiAgent' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'registerHumanWorker' : IDL.Func(
       [IDL.Text, IDL.Vec(Skill), Location, IDL.Float64],
@@ -159,6 +217,12 @@ export const idlService = IDL.Service({
       [],
     ),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'search' : IDL.Func(
+      [IDL.Vec(IDL.Text), IDL.Float64, IDL.Float64],
+      [IDL.Vec(HumanWorkerProfile)],
+      ['query'],
+    ),
+  'setPlatformFeeWallet' : IDL.Func([IDL.Principal], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
   'transform' : IDL.Func(
       [TransformationInput],
@@ -204,6 +268,14 @@ export const idlFactory = ({ IDL }) => {
     'lon' : IDL.Float64,
     'radius' : IDL.Float64,
   });
+  const PushNotification = IDL.Record({
+    'id' : IDL.Nat,
+    'workerId' : IDL.Principal,
+    'taskDetails' : IDL.Text,
+    'isRead' : IDL.Bool,
+    'taskId' : IDL.Nat,
+    'timestamp' : IDL.Int,
+  });
   const AiAgentClientProfile = IDL.Record({
     'principal' : IDL.Principal,
     'createdAt' : IDL.Int,
@@ -235,6 +307,25 @@ export const idlFactory = ({ IDL }) => {
       'aiAgent' : IDL.Null,
       'humanWorker' : IDL.Null,
     }),
+  });
+  const DailyStats = IDL.Record({
+    'date' : IDL.Int,
+    'totalFees' : IDL.Float64,
+    'taskCount' : IDL.Nat,
+  });
+  const DashboardStats = IDL.Record({
+    'totalTasks' : IDL.Nat,
+    'totalPlatformFees' : IDL.Float64,
+    'completedTasks' : IDL.Nat,
+    'activeWorkers' : IDL.Nat,
+    'totalRevenue' : IDL.Float64,
+  });
+  const DailySummary = IDL.Record({
+    'day' : IDL.Int,
+    'completedAmount' : IDL.Float64,
+    'completedTasks' : IDL.Nat,
+    'taskCount' : IDL.Nat,
+    'totalAmount' : IDL.Float64,
   });
   const StripeSessionStatus = IDL.Variant({
     'completed' : IDL.Record({
@@ -292,6 +383,8 @@ export const idlFactory = ({ IDL }) => {
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
+    'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
     'createCheckoutSession' : IDL.Func(
         [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
         [IDL.Text],
@@ -302,6 +395,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Nat],
         [],
       ),
+    'getAllNotifications' : IDL.Func(
+        [],
+        [IDL.Vec(PushNotification)],
+        ['query'],
+      ),
     'getAndUpdateCurrentPrice' : IDL.Func(
         [],
         [IDL.Record({ 'currency' : IDL.Opt(IDL.Text), 'price' : IDL.Float64 })],
@@ -309,7 +407,34 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getDailyEarningsStats' : IDL.Func(
+        [IDL.Int, IDL.Int],
+        [IDL.Vec(DailyStats)],
+        ['query'],
+      ),
+    'getDailySummary' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'day' : IDL.Int,
+            'completedAmount' : IDL.Float64,
+            'completedTasks' : IDL.Nat,
+            'taskCount' : IDL.Nat,
+            'totalAmount' : IDL.Float64,
+          }),
+        ],
+        ['query'],
+      ),
+    'getDashboardStats' : IDL.Func([], [DashboardStats], ['query']),
+    'getLast7DaysStats' : IDL.Func([], [IDL.Vec(DailySummary)], ['query']),
+    'getPlatformFeeTotal' : IDL.Func([], [IDL.Float64], ['query']),
     'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+    'getUnreadNotifications' : IDL.Func(
+        [],
+        [IDL.Vec(PushNotification)],
+        ['query'],
+      ),
+    'getUnreadNotificationsCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
@@ -317,6 +442,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+    'markNotificationAsRead' : IDL.Func([IDL.Nat], [], []),
     'registerAiAgent' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'registerHumanWorker' : IDL.Func(
         [IDL.Text, IDL.Vec(Skill), Location, IDL.Float64],
@@ -324,6 +450,12 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'search' : IDL.Func(
+        [IDL.Vec(IDL.Text), IDL.Float64, IDL.Float64],
+        [IDL.Vec(HumanWorkerProfile)],
+        ['query'],
+      ),
+    'setPlatformFeeWallet' : IDL.Func([IDL.Principal], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
     'transform' : IDL.Func(
         [TransformationInput],

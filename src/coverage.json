@@ -1,399 +1,100 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T23:27:53.896Z",
+  "generatedAt": "2026-02-23T14:35:01.448Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 21,
-    "implemented": 14,
+    "total": 6,
+    "implemented": 6,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Implement Internet Identity authentication system for all users with mandatory login before accessing any platform features",
+        "summary": "Remove all 'Caffeine' branding references from the Footer component, including the 'Powered by caffeine.ai' text and attribution",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/AuthGate.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/Footer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/AuthGate.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/Footer.tsx"
         ]
-      },
-      {
-        "id": "REQ-10",
-        "summary": "Build real-time communication system using canister signals for direct messaging between clients and workers during active tasks; implement notification system for task updates, messages, and payment confirmations",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/components/Chat.tsx",
-          "frontend/src/components/NotificationCenter.tsx",
-          "frontend/src/hooks/useNotifications.ts"
-        ],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-11",
-        "summary": "Create analytics dashboard showing worker earnings over time, task completion statistics, and geographic heat map of task activity specifically for Évora and Lisboa; make aggregate platform usage metrics publicly viewable on-chain",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Analytics.tsx",
-          "frontend/src/components/EarningsChart.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Analytics.tsx"
-        ]
-      },
-      {
-        "id": "REQ-12",
-        "summary": "Implement GDPR compliance features including self-service data deletion allowing users to remove their personal information, explicit consent checkboxes during profile creation for data processing, data export functionality providing users with all their stored data in machine-readable format, and privacy controls for profile visibility",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/GDPRConsent.tsx",
-          "frontend/src/components/PrivacyControls.tsx",
-          "frontend/src/pages/Settings.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/GDPRConsent.tsx",
-          "frontend/src/pages/Settings.tsx"
-        ]
-      },
-      {
-        "id": "REQ-13",
-        "summary": "Generate and display Privacy Policy and Terms of Service documents in both Portuguese and English covering EU legal requirements, GDPR compliance, platform liability limitations, and gig economy relationship disclaimers; provide links to these documents in footer and during registration; include disclaimer stating 'Não é emprego formal. Gig economy. Consulte fiscalista PT.'",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/PrivacyPolicy.tsx",
-          "frontend/src/pages/TermsOfService.tsx",
-          "frontend/src/components/Footer.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/PrivacyPolicy.tsx",
-          "frontend/src/pages/TermsOfService.tsx",
-          "frontend/src/components/Footer.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-14",
-        "summary": "Implement age verification gate requiring users to confirm they are 18 years or older through Internet Identity verification before accessing platform features; block access for users who cannot verify age requirement",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AgeGate.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AgeGate.tsx"
-        ]
-      },
-      {
-        "id": "REQ-15",
-        "summary": "Create automatic Portuguese tax reporting feature generating IVA (VAT) reports for workers earning over €10,000 annually; provide direct link to Portuguese Tax Authority (AT) portal for filing; display clear guidance about tax obligations for gig economy workers in Portugal",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/TaxReporting.tsx",
-          "frontend/src/pages/WorkerDashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/WorkerDashboard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-16",
-        "summary": "Build mobile-first responsive UI using TailwindCSS with dark and light theme toggle; implement language switcher for Portuguese and English with all interface text translated; ensure optimal touch interactions and mobile navigation patterns; use React components following project architecture",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ThemeToggle.tsx",
-          "frontend/src/hooks/useTheme.ts",
-          "frontend/src/i18n/translations.ts",
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/components/LanguageSelector.tsx",
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useTranslation.ts",
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-17",
-        "summary": "Add footer to all pages containing copyright notice 'CanisterTask © 2026 Hermínio Coragem (HCoragem)' and legal text 'Plataforma soberana ICP. Não custodiamos fundos. Pagamentos via ramps regulados EU/PT.'; create About page with full creator attribution 'Created by Hermínio Coragem (HCoragem) from Évora, Portugal' and detailed explanation of platform's sovereign architecture and non-custodial payment model",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/About.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/About.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-18",
-        "summary": "Configure Progressive Web App with complete manifest.json enabling installation as standalone mobile and web app; implement service worker for offline-first functionality caching critical assets and API responses; set up push notification system for task updates, messages, and payment alerts; ensure PWA passes installability criteria for all major browsers",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/manifest.json",
-          "frontend/public/service-worker.js",
-          "frontend/src/utils/pwa.ts",
-          "frontend/src/main.tsx",
-          "frontend/public/index.html"
-        ],
-        "matchedFiles": [
-          "frontend/public/manifest.json",
-          "frontend/src/main.tsx"
-        ]
-      },
-      {
-        "id": "REQ-19",
-        "summary": "Implement social sharing functionality with buttons for X (Twitter) and Telegram that share platform content with pre-filled hashtags #CanisterTask and #ICPSoberano; optimize meta tags for SEO with focus keywords 'gig economy ICP' and 'tarefas IA Portugal'; configure custom domain support for canistertask.icp or hcoragem.canistertask.icp addressing",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/components/ShareButtons.tsx",
-          "frontend/public/index.html"
-        ],
-        "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Create dual user profile system: Human gig workers with fields for name, photo upload, skills dropdown (predefined options: 'Fotografar locais', 'Entregas rápidas', 'Verificações presenciais', 'AR captures', plus custom text input), real-time GPS location, action radius in km, price per task/hour in euros, availability calendar, historical rating display, and IPFS portfolio links; AI Agent/Client profiles with agent name, description text area, and task history table",
+        "summary": "Add social media share buttons to the footer with links for X/Twitter (with hashtag #CanisterTask), Telegram, WhatsApp, and LinkedIn",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ProfileSetup.tsx",
-          "frontend/src/hooks/useProfileSetup.ts",
-          "frontend/src/components/ProfileView.tsx"
+          "frontend/src/components/Footer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/ProfileSetup.tsx"
-        ]
-      },
-      {
-        "id": "REQ-20",
-        "summary": "Design a modern, professional visual theme with warm earth tones inspired by Évora's historic architecture; use typography that balances readability on mobile with sophisticated desktop presentation; create an icon system that clearly communicates gig economy concepts (tasks, workers, verification, payments); ensure the design conveys trust, sovereignty, and technological innovation without using blue and purple color schemes",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/IconSystem.tsx",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-21",
-        "summary": "Render the generated platform icon as a static asset in frontend/public/assets/generated and display it as the app icon in manifest.json, favicon, and header logo",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/Header.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/Header.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/Footer.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Build Human Worker Dashboard displaying nearby available tasks with filters for skill type, location/distance, and price range; implement accept task button that changes task status to 'Em andamento'; provide proof upload interface for photos/videos with GPS timestamp capture; integrate IPFS storage for proof files with canister metadata storage; trigger automatic payment release after validation approval",
+        "summary": "Update footer text to display: '© 2026 Hermínio Coragem (HCoragem) Évora PT | CanisterTask ICP | Gig Economy Soberana' followed by social media buttons with emoji icons (📱 WhatsApp, 🐦 X, 💬 Telegram, 💼 LinkedIn)",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/WorkerDashboard.tsx",
-          "frontend/src/components/ProofUpload.tsx",
-          "frontend/src/hooks/useTasks.ts"
+          "frontend/src/components/Footer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/WorkerDashboard.tsx"
+          "frontend/src/components/Footer.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Create public API endpoints for AI agents using HTTPS outcalls: POST /search accepting JSON body with skills array, lat/lon coordinates, raio_km radius, and max_preco price limit returning matching worker profiles as JSON array; POST /hire accepting perfil_id, task_desc, preco, and prazo_min to create on-chain signed contract; GET /status/{task_id} returning real-time task status updates",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Implement escrow smart contract system where clients deposit ICP or euro-equivalent tokens that lock in contract until proof validation; create validation mechanism with two paths: automatic validation using GPS verification and AI image analysis, or decentralized voting by 3 randomly selected human validators; build dispute resolution system using NNS-style voting for contested tasks",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Build dual payment system supporting native cryptocurrency (ICP, ckBTC, cycles) for instant on-chain payments and EU-regulated fiat euro payments through integrated ramps; implement on-ramp via MoonPay or Stripe with EU-compliant KYC for clients to purchase ICP and pay for tasks; implement off-ramp for human workers to convert ICP to euros deposited to Portuguese IBAN or MBWay accounts; display transparent fee breakdowns for all transactions; ensure canister only handles ICP escrow without custodying fiat; maintain complete on-chain payment logs for compliance auditing",
+        "summary": "Add a 7-day earnings chart for HCoragem to the admin dashboard showing daily earnings trends",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/PaymentSetup.tsx",
-          "frontend/src/components/Payment.tsx",
-          "frontend/src/hooks/useCheckout.ts",
-          "frontend/src/pages/PaymentSuccess.tsx",
-          "frontend/src/pages/PaymentFailure.tsx",
-          "frontend/src/components/PaymentHistory.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/pages/AdminDashboard.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/PaymentSuccess.tsx",
-          "frontend/src/pages/PaymentFailure.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/pages/AdminDashboard.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
-        "id": "REQ-7",
-        "summary": "Integrate OpenStreetMap for displaying worker locations and task geography using HTTPS outcalls; implement real-time GPS tracking for workers during active tasks; display interactive map showing available tasks with distance indicators; create heat map visualization for task density in Évora and Lisboa regions",
-        "status": "missing",
+        "id": "REQ-5",
+        "summary": "Add real-time statistics cards to the admin dashboard showing today's total tasks and completed tasks count",
+        "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Map.tsx",
-          "frontend/src/components/TaskHeatMap.tsx",
-          "frontend/src/hooks/useGeolocation.ts"
+          "frontend/src/pages/AdminDashboard.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
-        "matchedFiles": []
+        "matchedFiles": [
+          "frontend/src/pages/AdminDashboard.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
       },
       {
-        "id": "REQ-8",
-        "summary": "Implement WebXR integration for AR-based task proofs allowing workers to capture augmented reality evidence for tasks requiring AR captures skill; store AR proof data alongside standard photo/video proofs in IPFS",
-        "status": "missing",
+        "id": "REQ-6",
+        "summary": "Add a real-time statistic showing the count of active workers in Évora to the admin dashboard",
+        "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ARCapture.tsx",
-          "frontend/src/hooks/useWebXR.ts"
+          "frontend/src/pages/AdminDashboard.tsx"
         ],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Create NFT badge system awarding collectible achievement badges to high-performing workers; implement rating system that tracks worker performance across completed tasks; display badges in worker profiles and calculate aggregate ratings visible to potential clients",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/components/BadgeGallery.tsx",
-          "frontend/src/components/RatingDisplay.tsx",
-          "frontend/src/components/RatingForm.tsx"
-        ],
-        "matchedFiles": []
+        "matchedFiles": [
+          "frontend/src/pages/AdminDashboard.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
-    "backend/authorization/MixinAuthorization.mo",
-    "backend/authorization/access-control.mo",
-    "backend/blob-storage/Mixin.mo",
-    "backend/blob-storage/Storage.mo",
-    "backend/http-outcalls/outcall.mo",
     "backend/main.mo",
-    "backend/stripe/stripe.mo",
     "build-request.json",
-    "build-template/Dockerfile",
-    "build-template/LICENSE",
-    "build-template/README.md",
-    "build-template/deploy.sh",
-    "build-template/icp.yaml",
-    "build-template/package.json",
-    "build-template/pnpm-lock.yaml",
-    "build-template/pnpm-workspace.yaml",
-    "build-template/scripts/prune-unused-images.js",
-    "build-template/scripts/resize-images.js",
-    "build-template/src/backend/canister.yaml",
-    "build-template/src/backend/system-idl/aaaaa-aa.did",
-    "build-template/src/frontend/canister.yaml",
-    "build-template/src/frontend/components.json",
-    "build-template/src/frontend/env.json",
-    "build-template/src/frontend/eslint-rules/no-bigint-in-query-keys.js",
-    "build-template/src/frontend/eslint-rules/require-internet-identity-provider.js",
-    "build-template/src/frontend/eslint.config.js",
-    "build-template/src/frontend/package.json",
-    "build-template/src/frontend/postcss.config.js",
-    "build-template/src/frontend/src/components/ui/accordion.tsx",
-    "build-template/src/frontend/src/components/ui/alert-dialog.tsx",
-    "build-template/src/frontend/src/components/ui/alert.tsx",
-    "build-template/src/frontend/src/components/ui/aspect-ratio.tsx",
-    "build-template/src/frontend/src/components/ui/avatar.tsx",
-    "build-template/src/frontend/src/components/ui/badge.tsx",
-    "build-template/src/frontend/src/components/ui/breadcrumb.tsx",
-    "build-template/src/frontend/src/components/ui/button.tsx",
-    "build-template/src/frontend/src/components/ui/calendar.tsx",
-    "build-template/src/frontend/src/components/ui/card.tsx",
-    "build-template/src/frontend/src/components/ui/carousel.tsx",
-    "build-template/src/frontend/src/components/ui/chart.tsx",
-    "build-template/src/frontend/src/components/ui/checkbox.tsx",
-    "build-template/src/frontend/src/components/ui/collapsible.tsx",
-    "build-template/src/frontend/src/components/ui/command.tsx",
-    "build-template/src/frontend/src/components/ui/context-menu.tsx",
-    "build-template/src/frontend/src/components/ui/dialog.tsx",
-    "build-template/src/frontend/src/components/ui/drawer.tsx",
-    "build-template/src/frontend/src/components/ui/dropdown-menu.tsx",
-    "build-template/src/frontend/src/components/ui/form.tsx",
-    "build-template/src/frontend/src/components/ui/hover-card.tsx",
-    "build-template/src/frontend/src/components/ui/input-otp.tsx",
-    "build-template/src/frontend/src/components/ui/input.tsx",
-    "build-template/src/frontend/src/components/ui/label.tsx",
-    "build-template/src/frontend/src/components/ui/menubar.tsx",
-    "build-template/src/frontend/src/components/ui/navigation-menu.tsx",
-    "build-template/src/frontend/src/components/ui/pagination.tsx",
-    "build-template/src/frontend/src/components/ui/popover.tsx",
-    "build-template/src/frontend/src/components/ui/progress.tsx",
-    "build-template/src/frontend/src/components/ui/radio-group.tsx",
-    "build-template/src/frontend/src/components/ui/resizable.tsx",
-    "build-template/src/frontend/src/components/ui/scroll-area.tsx",
-    "build-template/src/frontend/src/components/ui/select.tsx",
-    "build-template/src/frontend/src/components/ui/separator.tsx",
-    "build-template/src/frontend/src/components/ui/sheet.tsx",
-    "build-template/src/frontend/src/components/ui/sidebar.tsx",
-    "build-template/src/frontend/src/components/ui/skeleton.tsx",
-    "build-template/src/frontend/src/components/ui/slider.tsx",
-    "build-template/src/frontend/src/components/ui/sonner.tsx",
-    "build-template/src/frontend/src/components/ui/switch.tsx",
-    "build-template/src/frontend/src/components/ui/table.tsx",
-    "build-template/src/frontend/src/components/ui/tabs.tsx",
-    "build-template/src/frontend/src/components/ui/textarea.tsx",
-    "build-template/src/frontend/src/components/ui/toggle-group.tsx",
-    "build-template/src/frontend/src/components/ui/toggle.tsx",
-    "build-template/src/frontend/src/components/ui/tooltip.tsx",
-    "build-template/src/frontend/src/hooks/use-mobile.tsx",
-    "build-template/src/frontend/src/lib/utils.ts",
-    "build-template/src/frontend/tsconfig.json",
-    "build-template/src/frontend/vite.config.js",
-    "build-template/tsconfig.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/public/assets/generated/canistertask-icon.dim_512x512.png",
-    "frontend/public/manifest.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/AgeGate.tsx",
-    "frontend/src/components/AuthGate.tsx",
     "frontend/src/components/Footer.tsx",
-    "frontend/src/components/GDPRConsent.tsx",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/components/ProfileSetup.tsx",
-    "frontend/src/config.ts",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/hooks/useTranslation.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/About.tsx",
-    "frontend/src/pages/Analytics.tsx",
-    "frontend/src/pages/PaymentFailure.tsx",
-    "frontend/src/pages/PaymentSuccess.tsx",
-    "frontend/src/pages/PrivacyPolicy.tsx",
-    "frontend/src/pages/Settings.tsx",
-    "frontend/src/pages/TermsOfService.tsx",
-    "frontend/src/pages/WorkerDashboard.tsx",
-    "frontend/src/ui-summary.json",
-    "frontend/src/utils/StorageClient.ts",
-    "frontend/src/utils/urlParams.ts",
-    "frontend/tailwind.config.js",
+    "frontend/src/pages/AdminDashboard.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -16,6 +16,25 @@ export interface AiAgentClientProfile {
   'agentName' : string,
   'description' : string,
 }
+export interface DailyStats {
+  'date' : bigint,
+  'totalFees' : number,
+  'taskCount' : bigint,
+}
+export interface DailySummary {
+  'day' : bigint,
+  'completedAmount' : number,
+  'completedTasks' : bigint,
+  'taskCount' : bigint,
+  'totalAmount' : number,
+}
+export interface DashboardStats {
+  'totalTasks' : bigint,
+  'totalPlatformFees' : number,
+  'completedTasks' : bigint,
+  'activeWorkers' : bigint,
+  'totalRevenue' : number,
+}
 export interface HumanWorkerProfile {
   'principal' : Principal,
   'name' : string,
@@ -28,6 +47,14 @@ export interface HumanWorkerProfile {
   'location' : Location,
 }
 export interface Location { 'lat' : number, 'lon' : number, 'radius' : number }
+export interface PushNotification {
+  'id' : bigint,
+  'workerId' : Principal,
+  'taskDetails' : string,
+  'isRead' : boolean,
+  'taskId' : bigint,
+  'timestamp' : bigint,
+}
 export interface ShoppingItem {
   'productName' : string,
   'currency' : string,
@@ -101,6 +128,8 @@ export interface _SERVICE {
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'calculatePlatformFees' : ActorMethod<[], number>,
+  'completeTaskPayment' : ActorMethod<[bigint, number], undefined>,
   'createCheckoutSession' : ActorMethod<
     [Array<ShoppingItem>, string, string],
     string
@@ -109,22 +138,45 @@ export interface _SERVICE {
     [string, string, string, number, Location],
     bigint
   >,
+  'getAllNotifications' : ActorMethod<[], Array<PushNotification>>,
   'getAndUpdateCurrentPrice' : ActorMethod<
     [],
     { 'currency' : [] | [string], 'price' : number }
   >,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getDailyEarningsStats' : ActorMethod<[bigint, bigint], Array<DailyStats>>,
+  'getDailySummary' : ActorMethod<
+    [],
+    {
+      'day' : bigint,
+      'completedAmount' : number,
+      'completedTasks' : bigint,
+      'taskCount' : bigint,
+      'totalAmount' : number,
+    }
+  >,
+  'getDashboardStats' : ActorMethod<[], DashboardStats>,
+  'getLast7DaysStats' : ActorMethod<[], Array<DailySummary>>,
+  'getPlatformFeeTotal' : ActorMethod<[], number>,
   'getStripeSessionStatus' : ActorMethod<[string], StripeSessionStatus>,
+  'getUnreadNotifications' : ActorMethod<[], Array<PushNotification>>,
+  'getUnreadNotificationsCount' : ActorMethod<[], bigint>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isStripeConfigured' : ActorMethod<[], boolean>,
+  'markNotificationAsRead' : ActorMethod<[bigint], undefined>,
   'registerAiAgent' : ActorMethod<[string, string], undefined>,
   'registerHumanWorker' : ActorMethod<
     [string, Array<Skill>, Location, number],
     undefined
   >,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'search' : ActorMethod<
+    [Array<string>, number, number],
+    Array<HumanWorkerProfile>
+  >,
+  'setPlatformFeeWallet' : ActorMethod<[Principal], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
   'transform' : ActorMethod<[TransformationInput], TransformationOutput>,
   'updateHumanWorkerProfile' : ActorMethod<
