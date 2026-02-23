@@ -36,6 +36,13 @@ export const Location = IDL.Record({
   'lon' : IDL.Float64,
   'radius' : IDL.Float64,
 });
+export const DashboardStats = IDL.Record({
+  'totalTasks' : IDL.Nat,
+  'totalPlatformFees' : IDL.Float64,
+  'completedTasks' : IDL.Nat,
+  'activeWorkers' : IDL.Nat,
+  'totalRevenue' : IDL.Float64,
+});
 export const PushNotification = IDL.Record({
   'id' : IDL.Nat,
   'workerId' : IDL.Principal,
@@ -80,13 +87,6 @@ export const DailyStats = IDL.Record({
   'date' : IDL.Int,
   'totalFees' : IDL.Float64,
   'taskCount' : IDL.Nat,
-});
-export const DashboardStats = IDL.Record({
-  'totalTasks' : IDL.Nat,
-  'totalPlatformFees' : IDL.Float64,
-  'completedTasks' : IDL.Nat,
-  'activeWorkers' : IDL.Nat,
-  'totalRevenue' : IDL.Float64,
 });
 export const DailySummary = IDL.Record({
   'day' : IDL.Int,
@@ -153,6 +153,7 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'acceptTask' : IDL.Func([IDL.Nat], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
   'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
@@ -166,6 +167,7 @@ export const idlService = IDL.Service({
       [IDL.Nat],
       [],
     ),
+  'getAdminDashboardStats' : IDL.Func([], [DashboardStats], ['query']),
   'getAllNotifications' : IDL.Func([], [IDL.Vec(PushNotification)], ['query']),
   'getAndUpdateCurrentPrice' : IDL.Func(
       [],
@@ -196,6 +198,17 @@ export const idlService = IDL.Service({
   'getLast7DaysStats' : IDL.Func([], [IDL.Vec(DailySummary)], ['query']),
   'getPlatformFeeTotal' : IDL.Func([], [IDL.Float64], ['query']),
   'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+  'getTodayAdminStats' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'day' : IDL.Int,
+          'totalEarnings' : IDL.Float64,
+          'acceptedTasks' : IDL.Nat,
+        }),
+      ],
+      ['query'],
+    ),
   'getUnreadNotifications' : IDL.Func(
       [],
       [IDL.Vec(PushNotification)],
@@ -268,6 +281,13 @@ export const idlFactory = ({ IDL }) => {
     'lon' : IDL.Float64,
     'radius' : IDL.Float64,
   });
+  const DashboardStats = IDL.Record({
+    'totalTasks' : IDL.Nat,
+    'totalPlatformFees' : IDL.Float64,
+    'completedTasks' : IDL.Nat,
+    'activeWorkers' : IDL.Nat,
+    'totalRevenue' : IDL.Float64,
+  });
   const PushNotification = IDL.Record({
     'id' : IDL.Nat,
     'workerId' : IDL.Principal,
@@ -312,13 +332,6 @@ export const idlFactory = ({ IDL }) => {
     'date' : IDL.Int,
     'totalFees' : IDL.Float64,
     'taskCount' : IDL.Nat,
-  });
-  const DashboardStats = IDL.Record({
-    'totalTasks' : IDL.Nat,
-    'totalPlatformFees' : IDL.Float64,
-    'completedTasks' : IDL.Nat,
-    'activeWorkers' : IDL.Nat,
-    'totalRevenue' : IDL.Float64,
   });
   const DailySummary = IDL.Record({
     'day' : IDL.Int,
@@ -382,6 +395,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'acceptTask' : IDL.Func([IDL.Nat], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
     'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
@@ -395,6 +409,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Nat],
         [],
       ),
+    'getAdminDashboardStats' : IDL.Func([], [DashboardStats], ['query']),
     'getAllNotifications' : IDL.Func(
         [],
         [IDL.Vec(PushNotification)],
@@ -429,6 +444,17 @@ export const idlFactory = ({ IDL }) => {
     'getLast7DaysStats' : IDL.Func([], [IDL.Vec(DailySummary)], ['query']),
     'getPlatformFeeTotal' : IDL.Func([], [IDL.Float64], ['query']),
     'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+    'getTodayAdminStats' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'day' : IDL.Int,
+            'totalEarnings' : IDL.Float64,
+            'acceptedTasks' : IDL.Nat,
+          }),
+        ],
+        ['query'],
+      ),
     'getUnreadNotifications' : IDL.Func(
         [],
         [IDL.Vec(PushNotification)],
