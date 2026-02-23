@@ -9,10 +9,12 @@ export function useGetCallerUserProfile() {
     queryKey: ['currentUserProfile'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getCallerUserProfile();
+      const result = await actor.getCallerUserProfile();
+      return result;
     },
     enabled: !!actor && !actorFetching,
-    retry: false,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   return {
@@ -76,6 +78,8 @@ export function useGetDashboardStats() {
     enabled: !!actor && !actorFetching,
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 60 * 1000, // Refresh every minute for real-time updates
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -90,6 +94,8 @@ export function useGetDailyEarningsStats(from: bigint, to: bigint) {
     },
     enabled: !!actor && !actorFetching && from > 0n && to > 0n,
     staleTime: 60 * 1000, // 1 minute
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -105,6 +111,8 @@ export function useGetDailySummary() {
     enabled: !!actor && !actorFetching,
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 60 * 1000, // Refresh every minute for real-time updates
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -120,6 +128,47 @@ export function useGetLast7DaysStats() {
     enabled: !!actor && !actorFetching,
     staleTime: 60 * 1000, // 1 minute
     refetchInterval: 2 * 60 * 1000, // Refresh every 2 minutes for real-time updates
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+}
+
+export function useGetTodayAdminStats() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<{
+    day: bigint;
+    totalEarnings: number;
+    acceptedTasks: bigint;
+  }>({
+    queryKey: ['todayAdminStats'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getTodayAdminStats();
+    },
+    enabled: !!actor && !actorFetching,
+    staleTime: 30 * 1000, // 30 seconds
+    refetchInterval: 60 * 1000, // Refresh every minute for real-time updates
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+}
+
+export function useAcceptTask() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (taskId: bigint) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.acceptTask(taskId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dashboardStats'] });
+      queryClient.invalidateQueries({ queryKey: ['todayAdminStats'] });
+      queryClient.invalidateQueries({ queryKey: ['dailySummary'] });
+      queryClient.invalidateQueries({ queryKey: ['last7DaysStats'] });
+    },
   });
 }
 
@@ -135,6 +184,7 @@ export function useGetUnreadNotificationsCount() {
     },
     enabled: !!actor && !actorFetching,
     refetchInterval: 30000, // Poll every 30 seconds
+    retry: 2,
   });
 }
 
@@ -149,6 +199,7 @@ export function useGetUnreadNotifications() {
     },
     enabled: !!actor && !actorFetching,
     refetchInterval: 30000, // Poll every 30 seconds
+    retry: 2,
   });
 }
 
@@ -162,6 +213,7 @@ export function useGetAllNotifications() {
       return actor.getAllNotifications();
     },
     enabled: !!actor && !actorFetching,
+    retry: 2,
   });
 }
 

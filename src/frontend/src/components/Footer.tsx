@@ -13,8 +13,8 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-3">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <img src="/assets/generated/canistertask-icon.dim_512x512.png" alt="CanisterTask HCoragem" className="h-8 w-8 rounded-lg" />
-              <span className="font-bold">CanisterTask HCoragem</span>
+              <img src="/assets/generated/canistertask-icon.dim_512x512.png" alt="CanisterTask" className="h-8 w-8 rounded-lg" />
+              <span className="font-bold">CanisterTask</span>
             </div>
             <p className="text-sm text-muted-foreground">{t('footer.tagline')}</p>
           </div>
@@ -42,8 +42,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t pt-8">
           <div className="flex flex-col items-center gap-4 text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} Hermínio Coragem (HCoragem) Évora PT</p>
-            <p className="font-medium">CanisterTask ICP | Gig Economy Soberana</p>
+            <p>© 2026 Hermínio Coragem, Évora PT</p>
             <div className="flex items-center gap-3">
               <a
                 href={`https://wa.me/?text=${shareText}%20${shareUrl}`}

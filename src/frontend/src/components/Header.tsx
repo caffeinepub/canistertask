@@ -73,9 +73,6 @@ export default function Header() {
                 className="h-8 w-8"
               />
               <span className="font-bold text-xl">CanisterTask</span>
-              <span className="text-xs font-semibold text-primary px-2 py-0.5 rounded-full bg-primary/10">
-                HCoragem
-              </span>
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6">

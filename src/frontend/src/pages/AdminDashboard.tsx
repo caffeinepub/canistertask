@@ -1,7 +1,7 @@
-import { useGetDashboardStats, useIsCallerAdmin, useGetDailyEarningsStats, useGetDailySummary, useGetLast7DaysStats } from '../hooks/useQueries';
+import { useGetDashboardStats, useIsCallerAdmin, useGetDailyEarningsStats, useGetDailySummary, useGetLast7DaysStats, useGetTodayAdminStats } from '../hooks/useQueries';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, TrendingUp, CheckCircle, Users, DollarSign, Calendar, Activity, Clock } from 'lucide-react';
+import { RefreshCw, TrendingUp, CheckCircle, Users, DollarSign, Calendar, Activity, Clock, Heart } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const { data: stats, isLoading: statsLoading, error } = useGetDashboardStats();
   const { data: dailySummary, isLoading: dailySummaryLoading } = useGetDailySummary();
   const { data: last7DaysStats, isLoading: last7DaysLoading } = useGetLast7DaysStats();
+  const { data: todayAdminStats, isLoading: todayAdminStatsLoading } = useGetTodayAdminStats();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
@@ -43,6 +44,7 @@ export default function AdminDashboard() {
     queryClient.invalidateQueries({ queryKey: ['dailyEarningsStats'] });
     queryClient.invalidateQueries({ queryKey: ['dailySummary'] });
     queryClient.invalidateQueries({ queryKey: ['last7DaysStats'] });
+    queryClient.invalidateQueries({ queryKey: ['todayAdminStats'] });
   };
 
   const formatDate = (dayTimestamp: bigint) => {
@@ -117,6 +119,28 @@ export default function AdminDashboard() {
           </AlertDescription>
         </Alert>
       )}
+
+      {/* HCoragem Today Stats - Prominent Display */}
+      <Card className="mb-6 border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-background shadow-lg">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <Heart className="h-6 w-6 text-primary fill-primary" />
+            <CardTitle className="text-2xl font-bold">HCoragem</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {todayAdminStatsLoading ? (
+            <Skeleton className="h-12 w-full" />
+          ) : (
+            <div className="text-3xl font-bold text-primary">
+              €{todayAdminStats?.totalEarnings.toFixed(2) || '0.00'} hoje | {todayAdminStats?.acceptedTasks.toString() || '0'} tasks
+            </div>
+          )}
+          <p className="text-sm text-muted-foreground mt-2">
+            Ganhos e tasks aceites hoje (7% de cada task)
+          </p>
+        </CardContent>
+      </Card>
 
       {/* Real-time Statistics - Today's Summary */}
       <div className="mb-6 grid gap-4 md:grid-cols-3">
@@ -198,7 +222,7 @@ export default function AdminDashboard() {
                 <YAxis />
                 <Tooltip
                   formatter={(value: number, name: string) => {
-                    if (name === 'earnings') return [`${value.toFixed(2)} HC`, 'Ganhos'];
+                    if (name === 'earnings') return [`€${value.toFixed(2)}`, 'Ganhos'];
                     if (name === 'tasks') return [value, 'Tasks'];
                     return [value, name];
                   }}
@@ -233,7 +257,7 @@ export default function AdminDashboard() {
             ) : (
               <>
                 <div className="text-3xl font-bold">
-                  {stats?.totalPlatformFees.toFixed(2)} HC
+                  €{stats?.totalPlatformFees.toFixed(2) || '0.00'}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   {t('admin.totalFees')}
@@ -312,7 +336,7 @@ export default function AdminDashboard() {
               <Skeleton className="h-12 w-32" />
             ) : (
               <div className="text-4xl font-bold text-primary">
-                {stats?.totalRevenue.toFixed(2)} HC
+                €{stats?.totalRevenue.toFixed(2) || '0.00'}
               </div>
             )}
           </CardContent>
@@ -386,7 +410,7 @@ export default function AdminDashboard() {
                     <TableRow key={stat.date.toString()}>
                       <TableCell className="font-medium">{formatDate(stat.date)}</TableCell>
                       <TableCell className="text-right font-semibold text-primary">
-                        {stat.totalFees.toFixed(2)} HC
+                        €{stat.totalFees.toFixed(2)}
                       </TableCell>
                       <TableCell className="text-right">{stat.taskCount.toString()}</TableCell>
                     </TableRow>

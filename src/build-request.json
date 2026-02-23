@@ -1,128 +1,66 @@
 {
   "kind": "build_request",
-  "title": "Remove Caffeine branding and add social share buttons with real-time stats",
-  "projectName": "CanisterTask",
+  "title": "Fix infinite loading spinner on dashboard",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove all 'Caffeine' branding references from the Footer component, including the 'Powered by caffeine.ai' text and attribution",
+      "text": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-recent"
         ],
         "quotes": [
-          "REMOVER 'Caffeine' de TODOS rodapés"
+          "Nao passa daí"
         ]
       },
       "acceptanceCriteria": [
-        "No mentions of 'Caffeine' or 'caffeine.ai' appear in any footer",
-        "Footer component does not contain Caffeine attribution"
+        "The dashboard loads completely without getting stuck in a loading state",
+        "Task list or appropriate content displays below the CanisterTask header",
+        "No infinite spinner blocks the user interface"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add social media share buttons to the footer with links for X/Twitter (with hashtag #CanisterTask), Telegram, WhatsApp, and LinkedIn",
+      "text": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "ADICIONAR botões partilha redes sociais no footer: X/Twitter (#CanisterTask), Telegram, WhatsApp, LinkedIn"
+          "msg-recent"
         ]
       },
       "acceptanceCriteria": [
-        "Footer contains clickable icons/buttons for X/Twitter, Telegram, WhatsApp, and LinkedIn",
-        "X/Twitter share link includes #CanisterTask hashtag",
-        "All social share buttons are functional and open appropriate sharing dialogs"
+        "Loading spinner times out after 5 seconds if data doesn't load",
+        "Appropriate error message displays if loading fails",
+        "User can retry loading manually"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update footer text to display: '© 2026 Hermínio Coragem (HCoragem) Évora PT | CanisterTask ICP | Gig Economy Soberana' followed by social media buttons with emoji icons (📱 WhatsApp, 🐦 X, 💬 Telegram, 💼 LinkedIn)",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Footer FINAL: '© 2026 Hermínio Coragem (HCoragem) Évora PT CanisterTask ICP | Gig Economy Soberana [📱 WhatsApp] [🐦 X] [💬 Telegram] [💼 LinkedIn]'"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Footer displays copyright text exactly as specified",
-        "Social media buttons display with the specified emoji icons",
-        "Text and buttons are properly formatted and aligned"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add a 7-day earnings chart for HCoragem to the admin dashboard showing daily earnings trends",
+      "text": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Gráfico ganhos HCoragem 7 dias"
+          "msg-recent"
         ]
       },
       "acceptanceCriteria": [
-        "Admin dashboard displays a line or bar chart showing earnings over the last 7 days",
-        "Chart data is fetched from the backend with daily earnings aggregation",
-        "Chart updates in real-time or on page refresh"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add real-time statistics cards to the admin dashboard showing today's total tasks and completed tasks count",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Tasks hoje/completas"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin dashboard displays a card showing total tasks created today",
-        "Admin dashboard displays a card showing total tasks completed today",
-        "Statistics update automatically or on refresh"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Add a real-time statistic showing the count of active workers in Évora to the admin dashboard",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Workers ativos Évora"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin dashboard displays a card showing the number of active workers in Évora",
-        "Backend tracks and returns worker activity by location",
-        "Count updates in real-time or on page refresh"
+        "Dashboard stats query completes successfully",
+        "Actor initialization completes without errors",
+        "Console shows no React Query errors or failed network requests"
       ]
     }
   ],
   "constraints": [
-    "Do not modify Internet Identity authentication files (useInternetIdentity.ts, useInternetIdentity.tsx)",
-    "Do not modify Shadcn UI component sources in frontend/src/components/ui",
-    "Maintain single-actor architecture in backend/main.mo",
-    "Preserve existing admin authorization logic"
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts",
+    "Do not modify frontend/src/hooks/useActor.ts",
+    "Preserve existing authentication flow"
   ],
   "nonGoals": [
-    "Changing the overall dashboard layout structure",
-    "Modifying authentication flow or user management",
-    "Adding new payment processing features",
-    "Changing the task management system"
+    "Redesigning the dashboard layout",
+    "Adding new features beyond fixing the loading issue",
+    "Modifying backend logic unless directly related to the loading failure"
   ],
   "imageRequirements": {
     "required": [],

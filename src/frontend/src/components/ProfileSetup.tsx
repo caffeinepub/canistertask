@@ -1,14 +1,13 @@
 import { useState, ReactNode } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useGetCallerUserProfile, useSaveCallerUserProfile } from '../hooks/useQueries';
+import { useGetCallerUserProfile } from '../hooks/useQueries';
 import { useTranslation } from '../hooks/useTranslation';
-import { Loader2 } from 'lucide-react';
-import GDPRConsent from './GDPRConsent';
-import type { UserProfile } from '../backend';
-import { Variant_aiAgent_humanWorker } from '../backend';
+import { Loader2, X } from 'lucide-react';
+import { useActor } from '../hooks/useActor';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 interface ProfileSetupProps {
   children: ReactNode;
@@ -16,34 +15,46 @@ interface ProfileSetupProps {
 
 export default function ProfileSetup({ children }: ProfileSetupProps) {
   const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
-  const saveProfile = useSaveCallerUserProfile();
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [name, setName] = useState('');
-  const [gdprConsent, setGdprConsent] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [open, setOpen] = useState(true);
 
-  const showProfileSetup = isFetched && userProfile === null;
+  const showProfileSetup = isFetched && userProfile === null && open;
 
   const handleCreateWorkerProfile = async () => {
-    if (!name.trim() || !gdprConsent) return;
+    if (!actor) return;
+    
+    setIsCreating(true);
+    try {
+      // Call registerHumanWorker with default values for Évora
+      await actor.registerHumanWorker(
+        'Trabalhador', // Default name
+        [], // Empty skills array
+        { lat: 38.5714, lon: -7.9087, radius: 50 }, // Évora coordinates with 50km radius
+        15 // Default price €15
+      );
+      
+      // Invalidate the profile query to trigger refetch
+      await queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+      
+      // Close modal
+      setOpen(false);
+      
+      // Navigate to dashboard
+      navigate({ to: '/dashboard' });
+    } catch (error) {
+      console.error('Error creating profile:', error);
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
-    const profile: UserProfile = {
-      profileType: Variant_aiAgent_humanWorker.humanWorker,
-      humanWorker: {
-        principal: '' as any,
-        name: name.trim(),
-        photo: undefined,
-        skills: [],
-        location: { lat: 38.5714, lon: -7.9087, radius: 50 },
-        price: 10.0,
-        available: true,
-        rating: 0.0,
-        createdAt: BigInt(Date.now() * 1000000),
-      },
-      aiAgent: undefined,
-    };
-
-    await saveProfile.mutateAsync(profile);
+  const handleClose = () => {
+    setOpen(false);
   };
 
   if (profileLoading) {
@@ -56,32 +67,29 @@ export default function ProfileSetup({ children }: ProfileSetupProps) {
 
   return (
     <>
-      <Dialog open={showProfileSetup} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
+      <Dialog open={showProfileSetup} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-md">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+            onClick={handleClose}
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </Button>
           <DialogHeader>
             <DialogTitle className="text-center text-2xl">{t('profile.setup.title')}</DialogTitle>
             <DialogDescription className="text-center">{t('profile.setup.description')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">{t('profile.name')}</Label>
-              <Input
-                id="name"
-                placeholder={t('profile.namePlaceholder')}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <GDPRConsent checked={gdprConsent} onCheckedChange={setGdprConsent} />
-
             <Button
               onClick={handleCreateWorkerProfile}
-              disabled={!name.trim() || !gdprConsent || saveProfile.isPending}
+              disabled={isCreating}
               className="w-full"
               size="lg"
             >
-              {saveProfile.isPending ? (
+              {isCreating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t('profile.saving')}
@@ -90,6 +98,18 @@ export default function ProfileSetup({ children }: ProfileSetupProps) {
                 t('profile.type.humanWorker')
               )}
             </Button>
+
+            <div className="text-center text-sm text-muted-foreground">
+              {t('gdpr.consent')}{' '}
+              <Link to="/privacy" className="text-primary underline hover:text-primary/80">
+                {t('gdpr.privacyPolicy')}
+              </Link>{' '}
+              {t('gdpr.and')}{' '}
+              <Link to="/terms" className="text-primary underline hover:text-primary/80">
+                {t('gdpr.terms')}
+              </Link>
+              .
+            </div>
           </div>
         </DialogContent>
       </Dialog>

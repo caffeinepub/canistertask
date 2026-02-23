@@ -1,83 +1,52 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T14:35:01.448Z",
+  "generatedAt": "2026-02-23T16:32:12.431Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 6,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove all 'Caffeine' branding references from the Footer component, including the 'Powered by caffeine.ai' text and attribution",
+        "summary": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/pages/WorkerDashboard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/pages/WorkerDashboard.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add social media share buttons to the footer with links for X/Twitter (with hashtag #CanisterTask), Telegram, WhatsApp, and LinkedIn",
+        "summary": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/components/ErrorBoundary.tsx",
+          "frontend/src/pages/WorkerDashboard.tsx",
+          "frontend/src/hooks/useLoadingTimeout.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/components/ErrorBoundary.tsx",
+          "frontend/src/pages/WorkerDashboard.tsx",
+          "frontend/src/hooks/useLoadingTimeout.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Update footer text to display: '© 2026 Hermínio Coragem (HCoragem) Évora PT | CanisterTask ICP | Gig Economy Soberana' followed by social media buttons with emoji icons (📱 WhatsApp, 🐦 X, 💬 Telegram, 💼 LinkedIn)",
+        "summary": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/WorkerDashboard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Footer.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add a 7-day earnings chart for HCoragem to the admin dashboard showing daily earnings trends",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/AdminDashboard.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/AdminDashboard.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Add real-time statistics cards to the admin dashboard showing today's total tasks and completed tasks count",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/AdminDashboard.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/AdminDashboard.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add a real-time statistic showing the count of active workers in Évora to the admin dashboard",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/AdminDashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/AdminDashboard.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/WorkerDashboard.tsx"
         ]
       }
     ]
@@ -90,11 +59,12 @@
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/Footer.tsx",
+    "frontend/src/components/ErrorBoundary.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useLoadingTimeout.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/AdminDashboard.tsx",
+    "frontend/src/pages/WorkerDashboard.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

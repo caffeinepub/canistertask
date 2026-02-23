@@ -18,23 +18,18 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
 import BlobStorage "blob-storage/Storage";
 
+// Use migration in actor definitionfor preserving stable data on upgrade
+
 actor {
-  // Authorization + blob storage - Must be first
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
   include MixinStorage();
 
-  // Stripe configuration state
   var stripeConfig : ?Stripe.StripeConfiguration = null;
-
-  // Platform fee configuration (7%)
   let PLATFORM_FEE_PERCENTAGE : Float = 0.07;
-
-  // HCoragem wallet address for platform fees
   var platformFeeWallet : ?Principal = null;
 
-  // Push Notification Types
   type PushNotification = {
     id : Nat;
     workerId : Principal;
@@ -44,7 +39,6 @@ actor {
     isRead : Bool;
   };
 
-  // Statistics Types
   type DailySummary = {
     day : Int;
     taskCount : Nat;
@@ -53,14 +47,18 @@ actor {
     completedAmount : Float;
   };
 
-  // Chart Types // TODO: Rename to keep backwards compatibility only
+  public type DailyAdminSummary = {
+    day : Int;
+    totalEarnings : Float;
+    acceptedTasks : Nat;
+  };
+
   type DailyStats = {
     date : Int;
     totalFees : Float;
     taskCount : Nat;
   };
 
-  // Data structures
   type TaskId = Nat;
   type TaskStatus = {
     #inactive;
@@ -128,6 +126,7 @@ actor {
     status : Text;
     createdAt : Int;
     createdBy : Principal;
+    acceptedBy : ?Principal;
   };
 
   type Submission = {
@@ -163,7 +162,6 @@ actor {
 
   var currentPrice : (?Text, Float) = (null, 0.0);
 
-  // Helper functions
   public shared ({ caller }) func getAndUpdateCurrentPrice() : async {
     currency : ?Text;
     price : Float;
@@ -174,7 +172,6 @@ actor {
     { currency = currentPrice.0; price = currentPrice.1 };
   };
 
-  // Admin function to set platform fee wallet
   public shared ({ caller }) func setPlatformFeeWallet(wallet : Principal) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can set platform fee wallet");
@@ -182,7 +179,6 @@ actor {
     platformFeeWallet := ?wallet;
   };
 
-  // Stripe integration core functions
   public query ({ caller }) func isStripeConfigured() : async Bool {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can check Stripe configuration");
@@ -222,7 +218,40 @@ actor {
     await Stripe.createCheckoutSession(getStripeConfiguration(), caller, items, successUrl, cancelUrl, transform);
   };
 
-  // Required user profile system
+  public query ({ caller }) func getTodayAdminStats() : async {
+    day : Int;
+    totalEarnings : Float;
+    acceptedTasks : Nat;
+  } {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can view admin dashboard statistics");
+    };
+
+    let now = Time.now();
+    let currentDay = now / 86400000000000;
+
+    var totalEarnings : Float = 0.0;
+    var acceptedTasks = 0;
+
+    for ((taskId, taskPayment) in taskPayments.entries()) {
+      switch (payments.get(taskPayment.paymentId)) {
+        case (?payment) {
+          if (payment.createdAt / 86400000000000 == currentDay) {
+            totalEarnings += taskPayment.amount;
+            acceptedTasks += 1;
+          };
+        };
+        case (null) {};
+      };
+    };
+
+    {
+      day = currentDay;
+      totalEarnings;
+      acceptedTasks;
+    };
+  };
+
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
@@ -316,8 +345,6 @@ actor {
     };
   };
 
-  // Profile system
-  // Human worker
   public shared ({ caller }) func registerHumanWorker(
     name : Text,
     skills : [Skill],
@@ -386,7 +413,6 @@ actor {
     };
   };
 
-  // AI agent/client
   public shared ({ caller }) func registerAiAgent(agentName : Text, description : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can register as AI agents");
@@ -403,7 +429,6 @@ actor {
     );
   };
 
-  // Task management
   public shared ({ caller }) func createTask(
     taskType : Text,
     details : Text,
@@ -428,10 +453,10 @@ actor {
         status = "open";
         createdAt = Time.now();
         createdBy = caller;
+        acceptedBy = null;
       },
     );
 
-    // Notify matching workers
     for (worker in humanWorkerProfiles.values()) {
       var hasMatchingSkill = false;
       for (skill in worker.skills.vals()) {
@@ -485,46 +510,44 @@ actor {
     taskId;
   };
 
-  // Complete task with automatic 7% platform fee deduction
-  public shared ({ caller }) func completeTaskPayment(taskId : Nat, paymentAmount : Float) : async () {
+  public shared ({ caller }) func acceptTask(taskId : Nat) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can complete task payments");
+      Runtime.trap("Unauthorized: Only users can accept tasks");
     };
 
-    // Verify task exists
     let task = switch (tasks.get(taskId)) {
       case (?t) { t };
       case (null) { Runtime.trap("Task not found") };
     };
 
-    // Verify caller is the task creator (payer)
-    if (task.createdBy != caller) {
-      Runtime.trap("Unauthorized: Only task creator can complete payment");
+    if (task.status != "open") {
+      Runtime.trap("Task is not available for acceptance");
     };
 
-    // Verify task is not already completed
-    if (task.status == "completed") {
-      Runtime.trap("Task already completed");
+    if (task.createdBy == caller) {
+      Runtime.trap("Cannot accept your own task");
     };
 
-    // Calculate platform fee (7%)
-    let platformFee = paymentAmount * PLATFORM_FEE_PERCENTAGE;
-    let workerPayment = paymentAmount - platformFee;
+    switch (humanWorkerProfiles.get(caller)) {
+      case (null) { Runtime.trap("Only registered workers can accept tasks") };
+      case (?_) {};
+    };
 
-    // Create payment record
+    let platformFee = task.price * PLATFORM_FEE_PERCENTAGE;
+    let _workerPayment = task.price - platformFee;
+
     let paymentId = payments.size();
     payments.add(
       paymentId,
       {
         id = paymentId;
-        amount = paymentAmount;
+        amount = task.price;
         taskId;
         createdAt = Time.now();
-        paidBy = caller;
+        paidBy = task.createdBy;
       },
     );
 
-    // Record platform fee
     taskPayments.add(
       taskId,
       {
@@ -534,7 +557,32 @@ actor {
       },
     );
 
-    // Update task status to completed
+    let updatedTask = {
+      task with
+      status = "inProgress";
+      acceptedBy = ?caller;
+    };
+    tasks.add(taskId, updatedTask);
+  };
+
+  public shared ({ caller }) func completeTaskPayment(taskId : Nat, _paymentAmount : Float) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can complete task payments");
+    };
+
+    let task = switch (tasks.get(taskId)) {
+      case (?t) { t };
+      case (null) { Runtime.trap("Task not found") };
+    };
+
+    if (task.createdBy != caller) {
+      Runtime.trap("Unauthorized: Only task creator can complete payment");
+    };
+
+    if (task.status != "inProgress") {
+      Runtime.trap("Task must be in progress to complete");
+    };
+
     let updatedTask = {
       task with
       status = "completed";
@@ -542,7 +590,6 @@ actor {
     tasks.add(taskId, updatedTask);
   };
 
-  // PUBLIC SEARCH ENDPOINT - No authentication for public API
   public query func search(skills : [Text], lat : Float, lon : Float) : async [
     HumanWorkerProfile
   ] {
@@ -595,11 +642,9 @@ actor {
   };
 
   func calculateDistance(lat1 : Float, lon1 : Float, lat2 : Float, lon2 : Float) : Float {
-    // Haversine formula
     Float.sqrt((lat1 - lat2) * (lat1 - lat2) + (lon1 - lon2) * (lon1 - lon2));
   };
 
-  // DASHBOARD AND FEE SUPPORT - Admin only
   public query ({ caller }) func getDashboardStats() : async DashboardStats {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view dashboard statistics");
@@ -629,7 +674,6 @@ actor {
     };
   };
 
-  // Calculate total platform fees
   public query ({ caller }) func calculatePlatformFees() : async Float {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can calculate platform fees");
@@ -642,7 +686,6 @@ actor {
     total;
   };
 
-  // Get current platform fee total
   public query ({ caller }) func getPlatformFeeTotal() : async Float {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view platform fee total");
@@ -655,7 +698,6 @@ actor {
     total;
   };
 
-  // Check notifications - users can only see their own
   public query ({ caller }) func getUnreadNotifications() : async [PushNotification] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view notifications");
@@ -664,7 +706,6 @@ actor {
     pushNotifications.values().toArray().filter(func(notification) { notification.workerId == caller and not notification.isRead });
   };
 
-  // See all notifications - users can only see their own
   public query ({ caller }) func getAllNotifications() : async [PushNotification] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view notifications");
@@ -673,13 +714,11 @@ actor {
     pushNotifications.values().toArray().filter(func(notification) { notification.workerId == caller });
   };
 
-  // Mark notification as read - users can only mark their own notifications
   public shared ({ caller }) func markNotificationAsRead(notificationId : Nat) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can modify notifications");
     };
 
-    // Find the notification and verify ownership
     switch (pushNotifications.get(notificationId)) {
       case (?existingNotification) {
         if (existingNotification.workerId != caller) {
@@ -696,7 +735,6 @@ actor {
     };
   };
 
-  // Get unread notifications count - users can only see their own count
   public query ({ caller }) func getUnreadNotificationsCount() : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view notification count");
@@ -711,23 +749,18 @@ actor {
     count;
   };
 
-  // Daily Earnings Dashboard - Admin only
   public query ({ caller }) func getDailyEarningsStats(from : Int, to : Int) : async [DailyStats] {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view daily earnings stats");
     };
 
-    // Group payments by date
     let dailyStatsMap = Map.empty<Int, { var totalFees : Float; var taskCount : Nat }>();
 
     for (taskPayment in taskPayments.values()) {
-      // Get the payment to access timestamp
       switch (payments.get(taskPayment.paymentId)) {
         case (?payment) {
-          // Convert timestamp to day (nanoseconds to days)
           let dayTimestamp = payment.createdAt / 86400000000000;
 
-          // Filter by date range
           if (dayTimestamp >= from and dayTimestamp <= to) {
             switch (dailyStatsMap.get(dayTimestamp)) {
               case (?existing) {
@@ -744,7 +777,6 @@ actor {
       };
     };
 
-    // Convert to array
     let result = List.empty<DailyStats>();
     for ((date, stats) in dailyStatsMap.entries()) {
       result.add({
@@ -757,9 +789,6 @@ actor {
     result.values().toArray();
   };
 
-  // NEW - ONLY THE FOLLOWING 2 ENDPOINTS WERE ADDED TO ORIGINAL CODE
-
-  // Frontend queried dashboard cards for all users
   public query ({ caller }) func getDailySummary() : async {
     day : Int;
     taskCount : Nat;
@@ -767,23 +796,23 @@ actor {
     completedTasks : Nat;
     completedAmount : Float;
   } {
-    // Calculate current day
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view daily summary");
+    };
+
     let now = Time.now();
     let currentDay = now / 86400000000000;
 
-    // Initialize summary for today
     var taskCount = 0;
     var totalAmount : Float = 0.0;
     var completedTasks = 0;
     var completedAmount : Float = 0.0;
 
-    // Iterate through tasks to count and total today's
     for (task in tasks.values()) {
       if (task.createdAt / 86400000000000 == currentDay) {
         taskCount += 1;
         totalAmount += task.price;
 
-        // Count completed tasks
         if (task.status == "completed") {
           completedTasks += 1;
           completedAmount += task.price;
@@ -791,7 +820,6 @@ actor {
       };
     };
 
-    // Create summary for today
     {
       day = currentDay;
       taskCount;
@@ -801,14 +829,16 @@ actor {
     };
   };
 
-  // Get last 7 days stats for earnings chart and sidebar stats
   public query ({ caller }) func getLast7DaysStats() : async [DailySummary] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view statistics");
+    };
+
     let now = Time.now();
     let currentDay = now / 86400000000000;
 
     var results = List.empty<DailySummary>();
 
-    // Calculate stats for each of last 7 days
     var day = 0;
     while (day < 7) {
       let targetDay = currentDay - day;
@@ -818,13 +848,11 @@ actor {
       var completedTasks = 0;
       var completedAmount : Float = 0.0;
 
-      // Iterate through tasks for the specific day
       for (task in tasks.values()) {
         if (task.createdAt / 86400000000000 == targetDay) {
           taskCount += 1;
           totalAmount += task.price;
 
-          // Count completed tasks
           if (task.status == "completed") {
             completedTasks += 1;
             completedAmount += task.price;
@@ -832,7 +860,6 @@ actor {
         };
       };
 
-      // Create summary for the day
       let daySummary = {
         day = targetDay;
         taskCount;
@@ -841,12 +868,39 @@ actor {
         completedAmount;
       };
 
-      // Add the day's summary to the results list
       results.add(daySummary);
       day += 1;
     };
 
-    // Return all daily stats for last 7 days
     results.values().toArray();
+  };
+
+  public query ({ caller }) func getAdminDashboardStats() : async DashboardStats {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can view dashboard statistics");
+    };
+
+    var completedCount = 0;
+    for (task in tasks.values()) {
+      if (task.status == "completed") { completedCount += 1 };
+    };
+
+    var totalRevenue : Float = 0.0;
+    for (payment in payments.values()) {
+      totalRevenue += payment.amount;
+    };
+
+    var totalPlatformFees : Float = 0.0;
+    for (taskPayment in taskPayments.values()) {
+      totalPlatformFees += taskPayment.amount;
+    };
+
+    {
+      totalTasks = tasks.size();
+      totalRevenue;
+      totalPlatformFees;
+      completedTasks = completedCount;
+      activeWorkers = humanWorkerProfiles.size();
+    };
   };
 };

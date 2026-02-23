@@ -128,11 +128,13 @@ export enum Variant_aiAgent_humanWorker {
     humanWorker = "humanWorker"
 }
 export interface backendInterface {
+    acceptTask(taskId: bigint): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     calculatePlatformFees(): Promise<number>;
-    completeTaskPayment(taskId: bigint, paymentAmount: number): Promise<void>;
+    completeTaskPayment(taskId: bigint, _paymentAmount: number): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     createTask(taskType: string, details: string, duration: string, price: number, location: Location): Promise<bigint>;
+    getAdminDashboardStats(): Promise<DashboardStats>;
     getAllNotifications(): Promise<Array<PushNotification>>;
     getAndUpdateCurrentPrice(): Promise<{
         currency?: string;
@@ -152,6 +154,11 @@ export interface backendInterface {
     getLast7DaysStats(): Promise<Array<DailySummary>>;
     getPlatformFeeTotal(): Promise<number>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
+    getTodayAdminStats(): Promise<{
+        day: bigint;
+        totalEarnings: number;
+        acceptedTasks: bigint;
+    }>;
     getUnreadNotifications(): Promise<Array<PushNotification>>;
     getUnreadNotificationsCount(): Promise<bigint>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;

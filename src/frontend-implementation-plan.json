@@ -1,110 +1,68 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove Caffeine branding and add social share buttons with real-time stats",
+  "title": "Fix infinite loading spinner on dashboard",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove all 'Caffeine' branding references from the Footer component",
+      "summary": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
       "acceptanceCriteria": [
-        "No mentions of 'Caffeine' or 'caffeine.ai' appear in any footer",
-        "Footer component does not contain Caffeine attribution"
+        "The dashboard loads completely without getting stuck in a loading state",
+        "Task list or appropriate content displays below the CanisterTask header",
+        "No infinite spinner blocks the user interface"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Footer.tsx",
+          "path": "frontend/src/pages/WorkerDashboard.tsx",
           "operation": "modify",
-          "description": "Remove all references to 'Powered by caffeine.ai' text and caffeine.ai attribution links from the Footer component. Clean up any branding elements that mention Caffeine."
+          "description": "Add error handling and conditional rendering to prevent infinite loading states. Ensure that the component renders content when data is available or shows an error state when queries fail. Add fallback UI if dashboard stats are unavailable. Verify that all useQuery hooks properly handle loading, error, and success states."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add social media share buttons to the footer with platform-specific links",
+      "summary": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
       "acceptanceCriteria": [
-        "Footer contains clickable icons/buttons for X/Twitter, Telegram, WhatsApp, and LinkedIn",
-        "X/Twitter share link includes #CanisterTask hashtag",
-        "All social share buttons are functional and open appropriate sharing dialogs"
+        "Loading spinner times out after 5 seconds if data doesn't load",
+        "Appropriate error message displays if loading fails",
+        "User can retry loading manually"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Footer.tsx",
+          "path": "frontend/src/components/ErrorBoundary.tsx",
+          "operation": "create",
+          "description": "Create a React error boundary component that catches rendering errors in child components and displays a fallback UI with an error message and retry button. Include props for custom error messages and retry handlers."
+        },
+        {
+          "path": "frontend/src/pages/WorkerDashboard.tsx",
           "operation": "modify",
-          "description": "Add social media share buttons (X/Twitter, Telegram, WhatsApp, LinkedIn) to the footer. The X/Twitter link must include the #CanisterTask hashtag. Each button should open the appropriate sharing dialog with the current page URL and relevant metadata. Use Lucide React icons or emoji icons for visual representation."
+          "description": "Wrap the dashboard content with the ErrorBoundary component. Implement a loading timeout mechanism that transitions to an error state after 5 seconds if data fetching hasn't completed. Add a retry function that refetches dashboard data and resets the timeout. Display a user-friendly error message with a retry button when the timeout triggers or when queries fail."
+        },
+        {
+          "path": "frontend/src/hooks/useLoadingTimeout.ts",
+          "operation": "create",
+          "description": "Create a custom hook that manages a loading timeout state. The hook should accept a timeout duration (default 5000ms) and isLoading boolean, and return a hasTimedOut boolean flag and a reset function. Use useEffect with setTimeout to trigger the timeout when isLoading is true for longer than the specified duration."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Update footer text with copyright and platform branding followed by social media buttons with emoji icons",
+      "summary": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
       "acceptanceCriteria": [
-        "Footer displays copyright text exactly as specified",
-        "Social media buttons display with the specified emoji icons",
-        "Text and buttons are properly formatted and aligned"
+        "Dashboard stats query completes successfully",
+        "Actor initialization completes without errors",
+        "Console shows no React Query errors or failed network requests"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/components/Footer.tsx",
-          "operation": "modify",
-          "description": "Update the footer to display: '© 2026 Hermínio Coragem (HCoragem) Évora PT | CanisterTask ICP | Gig Economy Soberana' followed by social media buttons with emoji icons (📱 WhatsApp, 🐦 X, 💬 Telegram, 💼 LinkedIn). Ensure proper spacing, alignment, and responsive layout. The copyright text should be displayed first, followed by the social media buttons arranged horizontally with emoji icons clearly visible."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Add a 7-day earnings chart for HCoragem to the admin dashboard showing daily earnings trends",
-      "acceptanceCriteria": [
-        "Admin dashboard displays a line or bar chart showing earnings over the last 7 days",
-        "Chart data is fetched from the backend with daily earnings aggregation",
-        "Chart updates in real-time or on page refresh"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdminDashboard.tsx",
-          "operation": "modify",
-          "description": "Add a 7-day earnings chart component to the admin dashboard. Use the existing getLast7DaysStats backend capability (returns Array<DailySummary> with day, taskCount, completedTasks, totalAmount, completedAmount fields) to fetch daily earnings data. Implement a line or bar chart using Recharts or a similar charting library (already used in the project based on dependencies). Display earnings trends over the last 7 days with proper labels, tooltips, and responsive design. The chart should show daily earnings (completedAmount or totalAmount) on the Y-axis and dates on the X-axis."
-        },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add or verify the useLast7DaysStats query hook that fetches 7-day earnings statistics using the getLast7DaysStats backend capability. Ensure proper error handling, loading states, and React Query configuration. The hook should return the daily earnings data in a format consumable by the chart component."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add real-time statistics cards to the admin dashboard showing today's total tasks and completed tasks count",
-      "acceptanceCriteria": [
-        "Admin dashboard displays a card showing total tasks created today",
-        "Admin dashboard displays a card showing total tasks completed today",
-        "Statistics update automatically or on refresh"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdminDashboard.tsx",
-          "operation": "modify",
-          "description": "Add two statistic cards to the admin dashboard displaying today's total tasks and today's completed tasks. Use the existing getDailySummary backend capability (returns { day, taskCount, completedTasks, totalAmount, completedAmount }) to fetch today's statistics. Display these metrics in visually distinct cards with appropriate icons, labels, and styling consistent with the existing dashboard design. Position these cards prominently in the dashboard layout, ideally near other key metrics."
+          "description": "Review and fix the useDashboardStats hook to ensure proper error handling and actor availability checks. Add retry logic with exponential backoff for failed queries. Ensure the enabled flag properly waits for actor initialization before attempting queries. Add console logging for debugging query states (enabled, isLoading, error) without exposing sensitive data."
         },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/pages/WorkerDashboard.tsx",
           "operation": "modify",
-          "description": "Add or verify the useDailySummary query hook that fetches today's task statistics using the getDailySummary backend capability. Configure React Query with appropriate refetch intervals for real-time updates. Ensure proper typing with the DailySummary interface from backend.d.ts."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Add a real-time statistic showing the count of active workers in Évora to the admin dashboard",
-      "acceptanceCriteria": [
-        "Admin dashboard displays a card showing the number of active workers in Évora",
-        "Backend tracks and returns worker activity by location",
-        "Count updates in real-time or on page refresh"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdminDashboard.tsx",
-          "operation": "modify",
-          "description": "Add a statistic card to the admin dashboard displaying the count of active workers in Évora. Use the existing getDashboardStats backend capability (returns DashboardStats with activeWorkers field) to fetch the active worker count. Note: The backend currently tracks total active workers; if Évora-specific filtering is needed, use the activeWorkers field as-is and add a label indicating it represents Évora workers (assumption based on the platform's Évora focus). Display this metric in a card consistent with other dashboard statistics, with appropriate icon, label, and styling. Configure React Query to refresh periodically for real-time updates."
+          "description": "Add comprehensive error logging to identify the root cause of data fetching failures. Log actor state, query states, and any error objects from useQueries hooks. Ensure all query dependencies (actor, authentication state) are properly checked before rendering dependent UI. Add defensive checks for undefined or null data before rendering dashboard stats."
         }
       ]
     }

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-all-caffeine-branding-references-from-the-footer-component-including-the-powered-by-caffeine-ai-text-and-attribution",
-      "featureTitle": "Remove all 'Caffeine' branding references from the Footer component, including the 'Powered by caffeine.ai' text and attribution",
+      "featureId": "feature-fix-the-infinite-loading-spinner-that-appears-on-the-worker-dashboard-preventing-users-from-seeing-any-content-below-the-header",
+      "featureTitle": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
       "files": [
-        "frontend/src/components/Footer.tsx"
+        "frontend/src/pages/WorkerDashboard.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -24,10 +24,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-social-media-share-buttons-to-the-footer-with-links-for-x-twitter-with-hashtag-canistertask-telegram-whatsapp-and-linkedin",
-      "featureTitle": "Add social media share buttons to the footer with links for X/Twitter (with hashtag #CanisterTask), Telegram, WhatsApp, and LinkedIn",
+      "featureId": "feature-add-error-boundary-and-loading-state-timeout-5-seconds-to-the-workerdashboard-component-to-prevent-indefinite-loading-states",
+      "featureTitle": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
       "files": [
-        "frontend/src/components/Footer.tsx"
+        "frontend/src/components/ErrorBoundary.tsx",
+        "frontend/src/hooks/useLoadingTimeout.ts",
+        "frontend/src/pages/WorkerDashboard.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -46,10 +48,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-footer-text-to-display-2026-herm-nio-coragem-hcoragem-vora-pt-canistertask-icp-gig-economy-soberana-followed-by-social-media-buttons-with-emoji-icons-whatsapp-x-telegram-linkedin",
-      "featureTitle": "Update footer text to display: '© 2026 Hermínio Coragem (HCoragem) Évora PT | CanisterTask ICP | Gig Economy Soberana' followed by social media buttons with emoji icons (📱 WhatsApp, 🐦 X, 💬 Telegram, 💼 LinkedIn)",
+      "featureId": "feature-investigate-and-fix-the-root-cause-of-the-dashboard-data-fetching-failure-in-usequeries-hooks-or-useactor",
+      "featureTitle": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
       "files": [
-        "frontend/src/components/Footer.tsx"
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/WorkerDashboard.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -64,74 +67,6 @@
       ],
       "testIds": [
         "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-7-day-earnings-chart-for-hcoragem-to-the-admin-dashboard-showing-daily-earnings-trends",
-      "featureTitle": "Add a 7-day earnings chart for HCoragem to the admin dashboard showing daily earnings trends",
-      "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AdminDashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0",
-        "stripe@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-real-time-statistics-cards-to-the-admin-dashboard-showing-today-s-total-tasks-and-completed-tasks-count",
-      "featureTitle": "Add real-time statistics cards to the admin dashboard showing today's total tasks and completed tasks count",
-      "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AdminDashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0",
-        "stripe@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-real-time-statistic-showing-the-count-of-active-workers-in-vora-to-the-admin-dashboard",
-      "featureTitle": "Add a real-time statistic showing the count of active workers in Évora to the admin dashboard",
-      "files": [
-        "frontend/src/pages/AdminDashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0",
-        "stripe@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
       ],
       "confidence": "high"
     }

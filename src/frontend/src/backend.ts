@@ -228,11 +228,13 @@ export interface backendInterface {
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
+    acceptTask(taskId: bigint): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     calculatePlatformFees(): Promise<number>;
-    completeTaskPayment(taskId: bigint, paymentAmount: number): Promise<void>;
+    completeTaskPayment(taskId: bigint, _paymentAmount: number): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     createTask(taskType: string, details: string, duration: string, price: number, location: Location): Promise<bigint>;
+    getAdminDashboardStats(): Promise<DashboardStats>;
     getAllNotifications(): Promise<Array<PushNotification>>;
     getAndUpdateCurrentPrice(): Promise<{
         currency?: string;
@@ -252,6 +254,11 @@ export interface backendInterface {
     getLast7DaysStats(): Promise<Array<DailySummary>>;
     getPlatformFeeTotal(): Promise<number>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
+    getTodayAdminStats(): Promise<{
+        day: bigint;
+        totalEarnings: number;
+        acceptedTasks: bigint;
+    }>;
     getUnreadNotifications(): Promise<Array<PushNotification>>;
     getUnreadNotificationsCount(): Promise<bigint>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
@@ -369,6 +376,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async acceptTask(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.acceptTask(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.acceptTask(arg0);
+            return result;
+        }
+    }
     async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
         if (this.processError) {
             try {
@@ -436,6 +457,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.createTask(arg0, arg1, arg2, arg3, arg4);
+            return result;
+        }
+    }
+    async getAdminDashboardStats(): Promise<DashboardStats> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAdminDashboardStats();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAdminDashboardStats();
             return result;
         }
     }
@@ -586,6 +621,24 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getStripeSessionStatus(arg0);
             return from_candid_StripeSessionStatus_n26(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getTodayAdminStats(): Promise<{
+        day: bigint;
+        totalEarnings: number;
+        acceptedTasks: bigint;
+    }> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getTodayAdminStats();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getTodayAdminStats();
+            return result;
         }
     }
     async getUnreadNotifications(): Promise<Array<PushNotification>> {

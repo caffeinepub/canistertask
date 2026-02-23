@@ -1,92 +1,40 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "CanisterTask: A gig economy platform on Internet Computer Protocol (ICP) for Évora, Portugal, with admin dashboard, earnings tracking, and real-time statistics",
-  "architectural_notes": [
-    "Platform built on Internet Computer Protocol (ICP)",
-    "Localized for Évora, Portugal market",
-    "Admin dashboard with earnings tracking implemented",
-    "Social media integration for sharing (X/Twitter with #CanisterTask hashtag, Telegram, WhatsApp, LinkedIn)"
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [
+    "User reports being stuck at a certain point in the application flow (context: 'TESTE GRÁTIS' button or dashboard display)"
   ],
-  "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-remove-all-caffeine-branding-references-from-the-footer-component-including-the-powered-by-caffeine-ai-text-and-attribution",
-      "title": "Remove all 'Caffeine' branding references from the Footer component, including the 'Powered by caffeine.ai' text and attribution",
+      "id": "feature-fix-the-infinite-loading-spinner-that-appears-on-the-worker-dashboard-preventing-users-from-seeing-any-content-below-the-header",
+      "title": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-social-media-share-buttons-to-the-footer-with-links-for-x-twitter-with-hashtag-canistertask-telegram-whatsapp-and-linkedin",
-      "title": "Add social media share buttons to the footer with links for X/Twitter (with hashtag #CanisterTask), Telegram, WhatsApp, and LinkedIn",
+      "id": "feature-add-error-boundary-and-loading-state-timeout-5-seconds-to-the-workerdashboard-component-to-prevent-indefinite-loading-states",
+      "title": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-footer-text-to-display-2026-herm-nio-coragem-hcoragem-vora-pt-canistertask-icp-gig-economy-soberana-followed-by-social-media-buttons-with-emoji-icons-whatsapp-x-telegram-linkedin",
-      "title": "Update footer text to display: '© 2026 Hermínio Coragem (HCoragem) Évora PT | CanisterTask ICP | Gig Economy Soberana' followed by social media buttons with emoji icons (📱 WhatsApp, 🐦 X, 💬 Telegram, 💼 LinkedIn)",
+      "id": "feature-investigate-and-fix-the-root-cause-of-the-dashboard-data-fetching-failure-in-usequeries-hooks-or-useactor",
+      "title": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-add-a-7-day-earnings-chart-for-hcoragem-to-the-admin-dashboard-showing-daily-earnings-trends",
-      "title": "Add a 7-day earnings chart for HCoragem to the admin dashboard showing daily earnings trends",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-real-time-statistics-cards-to-the-admin-dashboard-showing-today-s-total-tasks-and-completed-tasks-count",
-      "title": "Add real-time statistics cards to the admin dashboard showing today's total tasks and completed tasks count",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-real-time-statistic-showing-the-count-of-active-workers-in-vora-to-the-admin-dashboard",
-      "title": "Add a real-time statistic showing the count of active workers in Évora to the admin dashboard",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Remove 'Caffeine' branding from all footers",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Add social media share buttons (X/Twitter, Telegram, WhatsApp, LinkedIn) to footer",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Update footer text to final version with copyright and social media icons",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add real-time statistics: 7-day earnings chart for HCoragem, today's tasks/completed tasks, active workers in Évora",
-      "reqIds": [],
-      "status": "pending"
-    }
-  ],
-  "projectName": "CanisterTask",
+  "new_feature_requests": [],
+  "projectName": "Fix infinite loading spinner on dashboard",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

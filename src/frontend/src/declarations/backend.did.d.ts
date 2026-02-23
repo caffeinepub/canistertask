@@ -127,6 +127,7 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'acceptTask' : ActorMethod<[bigint], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'calculatePlatformFees' : ActorMethod<[], number>,
   'completeTaskPayment' : ActorMethod<[bigint, number], undefined>,
@@ -138,6 +139,7 @@ export interface _SERVICE {
     [string, string, string, number, Location],
     bigint
   >,
+  'getAdminDashboardStats' : ActorMethod<[], DashboardStats>,
   'getAllNotifications' : ActorMethod<[], Array<PushNotification>>,
   'getAndUpdateCurrentPrice' : ActorMethod<
     [],
@@ -160,6 +162,10 @@ export interface _SERVICE {
   'getLast7DaysStats' : ActorMethod<[], Array<DailySummary>>,
   'getPlatformFeeTotal' : ActorMethod<[], number>,
   'getStripeSessionStatus' : ActorMethod<[string], StripeSessionStatus>,
+  'getTodayAdminStats' : ActorMethod<
+    [],
+    { 'day' : bigint, 'totalEarnings' : number, 'acceptedTasks' : bigint }
+  >,
   'getUnreadNotifications' : ActorMethod<[], Array<PushNotification>>,
   'getUnreadNotificationsCount' : ActorMethod<[], bigint>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
