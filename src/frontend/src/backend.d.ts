@@ -129,6 +129,7 @@ export enum Variant_aiAgent_humanWorker {
 }
 export interface backendInterface {
     acceptTask(taskId: bigint): Promise<void>;
+    activateTestMode(): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     calculatePlatformFees(): Promise<number>;
     completeTaskPayment(taskId: bigint, _paymentAmount: number): Promise<void>;
@@ -136,6 +137,7 @@ export interface backendInterface {
     createTask(taskType: string, details: string, duration: string, price: number, location: Location): Promise<bigint>;
     getAdminDashboardStats(): Promise<DashboardStats>;
     getAllNotifications(): Promise<Array<PushNotification>>;
+    getAllUserIds(): Promise<Array<Principal>>;
     getAndUpdateCurrentPrice(): Promise<{
         currency?: string;
         price: number;
@@ -164,6 +166,7 @@ export interface backendInterface {
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
+    isTestModeEnabled(): Promise<boolean>;
     markNotificationAsRead(notificationId: bigint): Promise<void>;
     registerAiAgent(agentName: string, description: string): Promise<void>;
     registerHumanWorker(name: string, skills: Array<Skill>, location: Location, price: number): Promise<void>;

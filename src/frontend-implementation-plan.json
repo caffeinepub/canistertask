@@ -1,68 +1,251 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix infinite loading spinner on dashboard",
+  "title": "Transform CanisterTask into Professional EU-Compliant PWA",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
+      "summary": "Replace existing footer with professional EU-compliant footer containing branding, navigation, and platform information",
       "acceptanceCriteria": [
-        "The dashboard loads completely without getting stuck in a loading state",
-        "Task list or appropriate content displays below the CanisterTask header",
-        "No infinite spinner blocks the user interface"
+        "Footer displays 'CanisterTask - Gig Economy Soberana ICP' branding",
+        "Footer shows copyright '© 2026 Hermínio Coragem, Évora PT'",
+        "Navigation links include Home, Tasks, Perfil, Admin, Sobre, Privacidade, Termos, and Cookies",
+        "Platform information shows '7% fee' and 'ICP mainnet'",
+        "All placeholder content is removed"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/WorkerDashboard.tsx",
+          "path": "frontend/src/components/Footer.tsx",
           "operation": "modify",
-          "description": "Add error handling and conditional rendering to prevent infinite loading states. Ensure that the component renders content when data is available or shows an error state when queries fail. Add fallback UI if dashboard stats are unavailable. Verify that all useQuery hooks properly handle loading, error, and success states."
+          "description": "Update footer component to display professional branding 'CanisterTask - Gig Economy Soberana ICP', copyright '© 2026 Hermínio Coragem, Évora PT', navigation links [Home, Tasks, Perfil, Admin, Sobre, Privacidade, Termos, Cookies], and platform information 'Plataforma intermediação | 7% fee | ICP mainnet'. Remove all existing placeholder content and social media buttons."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
+      "summary": "Create GDPR-compliant privacy policy page with Portuguese and English content",
       "acceptanceCriteria": [
-        "Loading spinner times out after 5 seconds if data doesn't load",
-        "Appropriate error message displays if loading fails",
-        "User can retry loading manually"
+        "Page accessible at /privacidade route",
+        "Content available in Portuguese and English",
+        "Covers GDPR requirements comprehensively",
+        "Addresses EU Platform Work Directive compliance",
+        "Includes sections on data collection, usage, sharing, user rights, and security"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ErrorBoundary.tsx",
-          "operation": "create",
-          "description": "Create a React error boundary component that catches rendering errors in child components and displays a fallback UI with an error message and retry button. Include props for custom error messages and retry handlers."
-        },
-        {
-          "path": "frontend/src/pages/WorkerDashboard.tsx",
+          "path": "frontend/src/pages/PrivacyPolicy.tsx",
           "operation": "modify",
-          "description": "Wrap the dashboard content with the ErrorBoundary component. Implement a loading timeout mechanism that transitions to an error state after 5 seconds if data fetching hasn't completed. Add a retry function that refetches dashboard data and resets the timeout. Display a user-friendly error message with a retry button when the timeout triggers or when queries fail."
+          "description": "Enhance existing privacy policy page with comprehensive GDPR-compliant content covering data collection, usage, sharing, user rights under GDPR, security measures, and EU Platform Work Directive compliance. Ensure both Portuguese and English translations are complete and accurate using the useTranslation hook."
         },
         {
-          "path": "frontend/src/hooks/useLoadingTimeout.ts",
-          "operation": "create",
-          "description": "Create a custom hook that manages a loading timeout state. The hook should accept a timeout duration (default 5000ms) and isLoading boolean, and return a hasTimedOut boolean flag and a reset function. Use useEffect with setTimeout to trigger the timeout when isLoading is true for longer than the specified duration."
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add complete privacy policy translations for both Portuguese (pt) and English (en) covering all GDPR requirements, data collection practices, user rights, security measures, and EU Platform Work Directive compliance sections."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
+      "summary": "Create comprehensive Terms of Service page compliant with gig economy regulations",
       "acceptanceCriteria": [
-        "Dashboard stats query completes successfully",
-        "Actor initialization completes without errors",
-        "Console shows no React Query errors or failed network requests"
+        "Page accessible at /termos route",
+        "Content compliant with EU gig economy regulations",
+        "Clearly states platform intermediation role",
+        "Specifies 7% platform fee",
+        "Includes sections on obligations, payments, liability, and dispute resolution"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/pages/TermsOfService.tsx",
           "operation": "modify",
-          "description": "Review and fix the useDashboardStats hook to ensure proper error handling and actor availability checks. Add retry logic with exponential backoff for failed queries. Ensure the enabled flag properly waits for actor initialization before attempting queries. Add console logging for debugging query states (enabled, isLoading, error) without exposing sensitive data."
+          "description": "Enhance existing terms of service page with comprehensive content covering user obligations, platform intermediation role, payment terms (7% fee), liability disclaimers, dispute resolution, and EU Platform Work Directive compliance. Ensure content is compliant with EU gig economy regulations."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add complete terms of service translations for both Portuguese (pt) and English (en) covering platform intermediation, 7% fee structure, user obligations, liability disclaimers, and dispute resolution procedures."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Create cookies policy page with consent management information",
+      "acceptanceCriteria": [
+        "Page accessible at /cookies route",
+        "Explains essential cookies usage",
+        "Provides consent management interface",
+        "Links to privacy policy"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Cookies.tsx",
+          "operation": "create",
+          "description": "Create new Cookies page component at /cookies route explaining essential cookies usage, consent management options, and cookie types. Include links to privacy policy page and provide information in both Portuguese and English using useTranslation hook."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add cookies page translations for both Portuguese (pt) and English (en) covering essential cookies explanation, consent management information, and cookie policy details."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register /cookies route in the router configuration, mapping it to the new Cookies page component. Add route between existing legal pages (privacy and terms)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Create about page describing CanisterTask mission and founder information",
+      "acceptanceCriteria": [
+        "Page accessible at /sobre route",
+        "Describes CanisterTask mission and platform purpose",
+        "Includes information about Hermínio Coragem",
+        "Mentions ICP blockchain foundation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/About.tsx",
+          "operation": "modify",
+          "description": "Enhance existing About page with comprehensive information about CanisterTask mission as a sovereign ICP-based gig economy marketplace, platform purpose, information about founder Hermínio Coragem from Évora PT, and ICP blockchain foundation. Ensure content is available in both Portuguese and English using useTranslation hook."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add about page translations for both Portuguese (pt) and English (en) covering CanisterTask mission, platform purpose, founder information (Hermínio Coragem, Évora PT), and ICP blockchain foundation details."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Implement GDPR-compliant cookie consent banner with accept and configure options",
+      "acceptanceCriteria": [
+        "Cookie banner appears on first visit",
+        "Banner displays text 'Usamos cookies essenciais'",
+        "Two buttons present: 'Aceitar' and 'Configurar'",
+        "Banner dismisses and doesn't reappear after acceptance",
+        "Consent preference is stored locally",
+        "Configure button links to /cookies page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/CookieConsentBanner.tsx",
+          "operation": "create",
+          "description": "Create GDPR-compliant cookie consent banner component that displays 'Usamos cookies essenciais' message on first visit. Include two buttons: 'Aceitar' (stores consent in localStorage and dismisses) and 'Configurar' (navigates to /cookies page). Store consent preference in localStorage to prevent banner from reappearing. Use useTranslation hook for multilingual support."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add cookie consent banner translations for both Portuguese (pt) and English (en) including 'Usamos cookies essenciais' message and button labels 'Aceitar' and 'Configurar'."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Import and render CookieConsentBanner component at the root level of the App component, ensuring it appears on all pages until consent is given."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Create professional worker profile cards with comprehensive information display",
+      "acceptanceCriteria": [
+        "Worker cards display avatar icon, name, and rating",
+        "Shows number of completed tasks in parentheses",
+        "Displays location with distance indicator",
+        "Shows hourly rate in euros",
+        "Lists skills/services offered",
+        "Shows total earnings (GAINHOS)",
+        "Displays last completed task with checkmark and timestamp",
+        "Includes 'Contratar' and 'Ver tasks' action buttons"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WorkerCard.tsx",
+          "operation": "create",
+          "description": "Create professional WorkerCard component displaying worker profile information: avatar icon with name, star rating with completed task count (⭐4.8 (23 tasks)), location with distance (📍 Évora 5km), hourly rate (€/h), skills/services, total earnings (GAINHOS), last completed task with checkmark and timestamp, and action buttons 'Contratar' and 'Ver tasks'. Accept HumanWorkerProfile props and format data for display."
+        },
+        {
+          "path": "frontend/src/pages/Workers.tsx",
+          "operation": "create",
+          "description": "Create Workers page component displaying a grid of WorkerCard components. Fetch worker profiles and render them using the WorkerCard component. Include search/filter functionality for skills and location. Handle loading and empty states."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add workers page translations for both Portuguese (pt) and English (en) including labels for rating, tasks completed, location, hourly rate, skills, earnings (GAINHOS), last task, and button labels 'Contratar' and 'Ver tasks'."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register /workers route in the router configuration, mapping it to the new Workers page component. Add route at the main navigation level."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Update main navigation menu to include all required sections",
+      "acceptanceCriteria": [
+        "Navigation includes Home, Tasks, Meu Perfil, Workers, and Admin links",
+        "Workers link navigates to worker listings page",
+        "All links are functional and correctly routed",
+        "Admin link only visible to authorized users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Update Header navigation menu to include all required links: Home, Tasks, Meu Perfil, Workers, and Admin. Ensure Workers link navigates to /workers route. Verify Admin link visibility is restricted to authorized users using isCallerAdmin check. Update link labels to match Portuguese naming (Meu Perfil instead of Profile)."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Add or update navigation translations for both Portuguese (pt) and English (en) including 'Home', 'Tasks', 'Meu Perfil', 'Workers', and 'Admin' labels."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Ensure free trial test mode displays 7% platform fee calculation",
+      "acceptanceCriteria": [
+        "Test mode allows task simulation without real transactions",
+        "Completed test tasks show 7% platform fee deduction",
+        "Worker receives 93% of task value in test mode",
+        "Platform fee calculation is clearly displayed",
+        "Test mode statistics are tracked and displayed"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useTestMode.ts",
+          "operation": "modify",
+          "description": "Verify and enhance test mode logic to correctly calculate and display 7% platform fee deduction. Ensure worker receives 93% of task value. Update task simulation to clearly show platform fee calculation breakdown (task value, 7% fee, 93% worker earnings)."
+        },
+        {
+          "path": "frontend/src/components/TestModeStats.tsx",
+          "operation": "modify",
+          "description": "Enhance TestModeStats component to display detailed breakdown of test mode transactions including total task value, 7% platform fee amount, and 93% worker earnings. Add visual indicators for fee calculation."
         },
         {
           "path": "frontend/src/pages/WorkerDashboard.tsx",
           "operation": "modify",
-          "description": "Add comprehensive error logging to identify the root cause of data fetching failures. Log actor state, query states, and any error objects from useQueries hooks. Ensure all query dependencies (actor, authentication state) are properly checked before rendering dependent UI. Add defensive checks for undefined or null data before rendering dashboard stats."
+          "description": "Ensure test mode task completion displays clear 7% platform fee calculation to users. Show breakdown of task value, platform fee (7%), and worker earnings (93%) in the UI when tasks are completed in test mode."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add SEO meta tags optimized for target keywords",
+      "acceptanceCriteria": [
+        "HTML head includes meta description with 'gig economy ICP Portugal'",
+        "Keywords include 'IA contrata workers'",
+        "Open Graph tags present for social sharing",
+        "Twitter Card meta tags configured",
+        "Title tag optimized for target keywords"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Update HTML head section with SEO-optimized meta tags. Add meta description including 'gig economy ICP Portugal' and 'IA contrata workers' keywords. Update title tag to include target keywords. Enhance existing Open Graph and Twitter Card meta tags with optimized content for social sharing. Add keywords meta tag with relevant terms."
         }
       ]
     }

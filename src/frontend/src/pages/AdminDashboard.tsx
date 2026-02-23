@@ -5,6 +5,7 @@ import { RefreshCw, TrendingUp, CheckCircle, Users, DollarSign, Calendar, Activi
 import { useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -123,9 +124,14 @@ export default function AdminDashboard() {
       {/* HCoragem Today Stats - Prominent Display */}
       <Card className="mb-6 border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-background shadow-lg">
         <CardHeader className="pb-3">
-          <div className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-primary fill-primary" />
-            <CardTitle className="text-2xl font-bold">HCoragem</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Heart className="h-6 w-6 text-primary fill-primary" />
+              <CardTitle className="text-2xl font-bold">HCoragem</CardTitle>
+            </div>
+            <Badge variant="default" className="bg-primary">
+              {t('admin.feeActive')}
+            </Badge>
           </div>
         </CardHeader>
         <CardContent>

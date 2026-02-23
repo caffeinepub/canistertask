@@ -1,53 +1,146 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T16:32:12.431Z",
+  "generatedAt": "2026-02-23T17:39:32.686Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 10,
+    "implemented": 9,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
+        "summary": "Replace the existing footer with a professional footer containing: 'CanisterTask - Gig Economy Soberana ICP', '© 2026 Hermínio Coragem, Évora PT', navigation links to [Home] [Tasks] [Perfil] [Admin] | [Sobre] [Privacidade] [Termos] [Cookies], and platform information 'Plataforma intermediação | 7% fee | ICP mainnet'. Remove any placeholder content.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/WorkerDashboard.tsx"
+          "frontend/src/components/Footer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/WorkerDashboard.tsx"
+          "frontend/src/components/Footer.tsx"
+        ]
+      },
+      {
+        "id": "REQ-10",
+        "summary": "Add SEO meta tags optimized for 'gig economy ICP Portugal' and 'IA contrata workers' to improve discoverability in search engines. Include relevant Open Graph and Twitter Card tags.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/index.html"
+        ],
+        "matchedFiles": [
+          "frontend/index.html"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
+        "summary": "Create a complete GDPR-compliant privacy policy page at /privacidade with content in both Portuguese and English. The policy must cover data collection, usage, sharing, user rights under GDPR, security measures, and be compliant with EU Platform Work Directive requirements.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ErrorBoundary.tsx",
-          "frontend/src/pages/WorkerDashboard.tsx",
-          "frontend/src/hooks/useLoadingTimeout.ts"
+          "frontend/src/pages/PrivacyPolicy.tsx",
+          "frontend/src/hooks/useTranslation.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/ErrorBoundary.tsx",
-          "frontend/src/pages/WorkerDashboard.tsx",
-          "frontend/src/hooks/useLoadingTimeout.ts"
+          "frontend/src/pages/PrivacyPolicy.tsx",
+          "frontend/src/hooks/useTranslation.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
+        "summary": "Create a comprehensive Terms of Service page at /termos that is compliant with gig economy regulations and EU Platform Work Directive. Include sections on user obligations, platform intermediation role, payment terms (7% fee), liability disclaimers, and dispute resolution.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/WorkerDashboard.tsx"
+          "frontend/src/pages/TermsOfService.tsx",
+          "frontend/src/hooks/useTranslation.ts"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/WorkerDashboard.tsx"
+          "frontend/src/pages/TermsOfService.tsx",
+          "frontend/src/hooks/useTranslation.ts"
         ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Create a cookies page at /cookies with cookie policy information and consent management options. Include explanation of essential cookies used and user consent controls.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/Cookies.tsx",
+          "frontend/src/hooks/useTranslation.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/Cookies.tsx",
+          "frontend/src/hooks/useTranslation.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Create an about page at /sobre describing the CanisterTask mission and information about Hermínio Coragem. Include the platform's purpose as a sovereign ICP-based gig economy marketplace.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/About.tsx",
+          "frontend/src/hooks/useTranslation.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/About.tsx",
+          "frontend/src/hooks/useTranslation.ts"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Implement a GDPR-compliant cookie consent banner that appears on first visit with text 'Usamos cookies essenciais' and two buttons: [Aceitar] and [Configurar]. Store consent preference and prevent banner from showing again once accepted.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/CookieConsentBanner.tsx",
+          "frontend/src/hooks/useTranslation.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/CookieConsentBanner.tsx",
+          "frontend/src/hooks/useTranslation.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Create professional worker profile cards displaying: worker name with avatar icon, star rating with number of completed tasks (e.g., ⭐4.8 (23 tasks)), location with distance (e.g., 📍 Évora 5km), hourly rate, skills/services offered, total earnings (GAINHOS), last completed task with timestamp, and action buttons [Contratar] and [Ver tasks]. Example: '👤 João Silva ⭐4.8 (23 tasks) 📍 Évora 5km | €12/h | Foto/Entrega/Verificação GAINHOS: €320 | ÚLTIMA: 'Foto loja X' ✓ 2h'",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WorkerCard.tsx",
+          "frontend/src/pages/Workers.tsx",
+          "frontend/src/hooks/useTranslation.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WorkerCard.tsx",
+          "frontend/src/pages/Workers.tsx",
+          "frontend/src/hooks/useTranslation.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Update the main navigation menu to include all sections: Home, Tasks, Meu Perfil, Workers, and Admin. Ensure Workers link navigates to a page displaying worker profile cards.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Header.tsx",
+          "frontend/src/hooks/useTranslation.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Header.tsx",
+          "frontend/src/hooks/useTranslation.ts"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Ensure the free trial test mode functionality is working and displays a simulated 7% platform fee calculation when tasks are completed in test mode.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/hooks/useTestMode.ts",
+          "frontend/src/components/TestModeStats.tsx",
+          "frontend/src/pages/WorkerDashboard.tsx"
+        ],
+        "matchedFiles": []
       }
     ]
   },
@@ -57,14 +150,24 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/ErrorBoundary.tsx",
+    "frontend/src/components/CookieConsentBanner.tsx",
+    "frontend/src/components/Footer.tsx",
+    "frontend/src/components/GDPRConsent.tsx",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/components/ProfileSetup.tsx",
+    "frontend/src/components/WorkerCard.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useLoadingTimeout.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/WorkerDashboard.tsx",
+    "frontend/src/hooks/useTranslation.ts",
+    "frontend/src/pages/About.tsx",
+    "frontend/src/pages/Cookies.tsx",
+    "frontend/src/pages/PrivacyPolicy.tsx",
+    "frontend/src/pages/TermsOfService.tsx",
+    "frontend/src/pages/Workers.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

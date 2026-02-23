@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import type { UserProfile, DashboardStats, DailyStats, PushNotification, DailySummary } from '../backend';
+import { Principal } from '@dfinity/principal';
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -22,6 +23,21 @@ export function useGetCallerUserProfile() {
     isLoading: actorFetching || query.isLoading,
     isFetched: !!actor && query.isFetched,
   };
+}
+
+export function useGetUserProfile(userId: Principal | null) {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<UserProfile | null>({
+    queryKey: ['userProfile', userId?.toString()],
+    queryFn: async () => {
+      if (!actor || !userId) throw new Error('Actor or userId not available');
+      const result = await actor.getUserProfile(userId);
+      return result;
+    },
+    enabled: !!actor && !actorFetching && !!userId,
+    retry: 2,
+  });
 }
 
 export function useSaveCallerUserProfile() {

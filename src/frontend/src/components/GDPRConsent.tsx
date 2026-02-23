@@ -18,11 +18,11 @@ export default function GDPRConsent({ checked, onCheckedChange }: GDPRConsentPro
         <Checkbox id="gdpr-consent" checked={checked} onCheckedChange={onCheckedChange} />
         <Label htmlFor="gdpr-consent" className="text-sm leading-relaxed">
           {t('gdpr.consent')}{' '}
-          <Link to="/privacy" className="text-primary underline">
+          <Link to="/privacidade" className="text-primary underline">
             {t('gdpr.privacyPolicy')}
           </Link>{' '}
           {t('gdpr.and')}{' '}
-          <Link to="/terms" className="text-primary underline">
+          <Link to="/termos" className="text-primary underline">
             {t('gdpr.terms')}
           </Link>
           .

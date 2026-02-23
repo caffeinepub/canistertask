@@ -18,8 +18,6 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
 import BlobStorage "blob-storage/Storage";
 
-// Use migration in actor definitionfor preserving stable data on upgrade
-
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -29,6 +27,7 @@ actor {
   var stripeConfig : ?Stripe.StripeConfiguration = null;
   let PLATFORM_FEE_PERCENTAGE : Float = 0.07;
   var platformFeeWallet : ?Principal = null;
+  var testMode : Bool = false;
 
   type PushNotification = {
     id : Nat;
@@ -172,6 +171,23 @@ actor {
     { currency = currentPrice.0; price = currentPrice.1 };
   };
 
+  public query ({ caller }) func getAllUserIds() : async [Principal] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view user IDs");
+    };
+
+    var result = List.empty<Principal>();
+
+    for ((userId, _) in humanWorkerProfiles.entries()) {
+      result.add(userId);
+    };
+    for ((clientId, _) in aiAgentProfiles.entries()) {
+      result.add(clientId);
+    };
+
+    result.values().toArray();
+  };
+
   public shared ({ caller }) func setPlatformFeeWallet(wallet : Principal) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can set platform fee wallet");
@@ -186,15 +202,15 @@ actor {
     stripeConfig != null;
   };
 
+  public query func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
+    OutCall.transform(input);
+  };
+
   public shared ({ caller }) func setStripeConfiguration(config : Stripe.StripeConfiguration) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can set Stripe configuration");
     };
     stripeConfig := ?config;
-  };
-
-  public query func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
-    OutCall.transform(input);
   };
 
   func getStripeConfiguration() : Stripe.StripeConfiguration {
@@ -216,6 +232,20 @@ actor {
       Runtime.trap("Unauthorized: Only users can create checkout sessions");
     };
     await Stripe.createCheckoutSession(getStripeConfiguration(), caller, items, successUrl, cancelUrl, transform);
+  };
+
+  public shared ({ caller }) func activateTestMode() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can enable test mode");
+    };
+    testMode := true;
+  };
+
+  public query ({ caller }) func isTestModeEnabled() : async Bool {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can check test mode status");
+    };
+    testMode;
   };
 
   public query ({ caller }) func getTodayAdminStats() : async {
@@ -283,10 +313,6 @@ actor {
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view profiles");
-    };
-
-    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile");
     };
 
     switch (humanWorkerProfiles.get(user)) {

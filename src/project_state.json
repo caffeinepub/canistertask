@@ -1,40 +1,146 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [
-    "User reports being stuck at a certain point in the application flow (context: 'TESTE GRÁTIS' button or dashboard display)"
+  "summary": "CanisterTask: A gig economy platform on ICP with AI task delegation, worker profiles, EU compliance features including GDPR pages, cookie consent, professional footer with fee structure, and SEO optimization for Portuguese market. Focus on professional PWA transformation meeting EU Platform Work Directive requirements.",
+  "architectural_notes": [
+    "EU Platform Work Directive compliance requirements implemented",
+    "GDPR-compliant cookie consent system with banner and configuration",
+    "Multi-language support for legal pages (Portuguese/English)",
+    "7% platform fee structure integrated into system",
+    "ICP mainnet deployment target",
+    "PWA architecture for professional web app experience",
+    "Worker rating and task completion tracking system",
+    "Geographic proximity calculation for worker matching (Évora-based)"
   ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-fix-the-infinite-loading-spinner-that-appears-on-the-worker-dashboard-preventing-users-from-seeing-any-content-below-the-header",
-      "title": "Fix the infinite loading spinner that appears on the worker dashboard, preventing users from seeing any content below the header",
+      "id": "feature-replace-the-existing-footer-with-a-professional-footer-containing-canistertask-gig-economy-soberana-icp-2026-herm-nio-coragem-vora-pt-navigation-links-to-home-tasks-perfil-admin-sobre-privacidade-termos-cookies-and-platform-information-plataforma-intermedia-o-7-fee-icp-mainnet-remove-any-placeholder-content",
+      "title": "Replace the existing footer with a professional footer containing: 'CanisterTask - Gig Economy Soberana ICP', '© 2026 Hermínio Coragem, Évora PT', navigation links to [Home] [Tasks] [Perfil] [Admin] | [Sobre] [Privacidade] [Termos] [Cookies], and platform information 'Plataforma intermediação | 7% fee | ICP mainnet'. Remove any placeholder content.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-error-boundary-and-loading-state-timeout-5-seconds-to-the-workerdashboard-component-to-prevent-indefinite-loading-states",
-      "title": "Add error boundary and loading state timeout (5 seconds) to the WorkerDashboard component to prevent indefinite loading states",
+      "id": "feature-create-a-complete-gdpr-compliant-privacy-policy-page-at-privacidade-with-content-in-both-portuguese-and-english-the-policy-must-cover-data-collection-usage-sharing-user-rights-under-gdpr-security-measures-and-be-compliant-with-eu-platform-work-directive-requirements",
+      "title": "Create a complete GDPR-compliant privacy policy page at /privacidade with content in both Portuguese and English. The policy must cover data collection, usage, sharing, user rights under GDPR, security measures, and be compliant with EU Platform Work Directive requirements.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-investigate-and-fix-the-root-cause-of-the-dashboard-data-fetching-failure-in-usequeries-hooks-or-useactor",
-      "title": "Investigate and fix the root cause of the dashboard data fetching failure in useQueries hooks or useActor",
+      "id": "feature-create-a-comprehensive-terms-of-service-page-at-termos-that-is-compliant-with-gig-economy-regulations-and-eu-platform-work-directive-include-sections-on-user-obligations-platform-intermediation-role-payment-terms-7-fee-liability-disclaimers-and-dispute-resolution",
+      "title": "Create a comprehensive Terms of Service page at /termos that is compliant with gig economy regulations and EU Platform Work Directive. Include sections on user obligations, platform intermediation role, payment terms (7% fee), liability disclaimers, and dispute resolution.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-cookies-page-at-cookies-with-cookie-policy-information-and-consent-management-options-include-explanation-of-essential-cookies-used-and-user-consent-controls",
+      "title": "Create a cookies page at /cookies with cookie policy information and consent management options. Include explanation of essential cookies used and user consent controls.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-about-page-at-sobre-describing-the-canistertask-mission-and-information-about-herm-nio-coragem-include-the-platform-s-purpose-as-a-sovereign-icp-based-gig-economy-marketplace",
+      "title": "Create an about page at /sobre describing the CanisterTask mission and information about Hermínio Coragem. Include the platform's purpose as a sovereign ICP-based gig economy marketplace.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-gdpr-compliant-cookie-consent-banner-that-appears-on-first-visit-with-text-usamos-cookies-essenciais-and-two-buttons-aceitar-and-configurar-store-consent-preference-and-prevent-banner-from-showing-again-once-accepted",
+      "title": "Implement a GDPR-compliant cookie consent banner that appears on first visit with text 'Usamos cookies essenciais' and two buttons: [Aceitar] and [Configurar]. Store consent preference and prevent banner from showing again once accepted.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-professional-worker-profile-cards-displaying-worker-name-with-avatar-icon-star-rating-with-number-of-completed-tasks-e-g-4-8-23-tasks-location-with-distance-e-g-vora-5km-hourly-rate-skills-services-offered-total-earnings-gainhos-last-completed-task-with-timestamp-and-action-buttons-contratar-and-ver-tasks-example-jo-o-silva-4-8-23-tasks-vora-5km-12-h-foto-entrega-verifica-o-gainhos-320-ltima-foto-loja-x-2h",
+      "title": "Create professional worker profile cards displaying: worker name with avatar icon, star rating with number of completed tasks (e.g., ⭐4.8 (23 tasks)), location with distance (e.g., 📍 Évora 5km), hourly rate, skills/services offered, total earnings (GAINHOS), last completed task with timestamp, and action buttons [Contratar] and [Ver tasks]. Example: '👤 João Silva ⭐4.8 (23 tasks) 📍 Évora 5km | €12/h | Foto/Entrega/Verificação GAINHOS: €320 | ÚLTIMA: 'Foto loja X' ✓ 2h'",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-main-navigation-menu-to-include-all-sections-home-tasks-meu-perfil-workers-and-admin-ensure-workers-link-navigates-to-a-page-displaying-worker-profile-cards",
+      "title": "Update the main navigation menu to include all sections: Home, Tasks, Meu Perfil, Workers, and Admin. Ensure Workers link navigates to a page displaying worker profile cards.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-seo-meta-tags-optimized-for-gig-economy-icp-portugal-and-ia-contrata-workers-to-improve-discoverability-in-search-engines-include-relevant-open-graph-and-twitter-card-tags",
+      "title": "Add SEO meta tags optimized for 'gig economy ICP Portugal' and 'IA contrata workers' to improve discoverability in search engines. Include relevant Open Graph and Twitter Card tags.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Fix infinite loading spinner on dashboard",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Professional footer with CanisterTask branding, copyright, navigation links, and platform fee info",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Complete legal pages: /privacidade (GDPR PT/EN), /termos (ToS), /cookies (consent), /sobre (mission)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "GDPR-compliant cookie banner with Accept/Configure options",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Professional worker profiles with ratings, location, hourly rate, earnings, recent tasks, and hire/view options",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Complete navigation menu: Home, Tasks, Meu Perfil, Workers, Admin",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Free trial functionality with simulated 7% platform fee",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "SEO meta tags optimized for 'gig economy ICP Portugal' and 'IA contrata workers'",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Ensure the free trial test mode functionality is working and displays a simulated 7% platform fee calculation when tasks are completed in test mode.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "CanisterTask",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

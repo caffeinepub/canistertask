@@ -154,6 +154,7 @@ export const idlService = IDL.Service({
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'acceptTask' : IDL.Func([IDL.Nat], [], []),
+  'activateTestMode' : IDL.Func([], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
   'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
@@ -169,6 +170,7 @@ export const idlService = IDL.Service({
     ),
   'getAdminDashboardStats' : IDL.Func([], [DashboardStats], ['query']),
   'getAllNotifications' : IDL.Func([], [IDL.Vec(PushNotification)], ['query']),
+  'getAllUserIds' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
   'getAndUpdateCurrentPrice' : IDL.Func(
       [],
       [IDL.Record({ 'currency' : IDL.Opt(IDL.Text), 'price' : IDL.Float64 })],
@@ -222,6 +224,7 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+  'isTestModeEnabled' : IDL.Func([], [IDL.Bool], ['query']),
   'markNotificationAsRead' : IDL.Func([IDL.Nat], [], []),
   'registerAiAgent' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'registerHumanWorker' : IDL.Func(
@@ -396,6 +399,7 @@ export const idlFactory = ({ IDL }) => {
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'acceptTask' : IDL.Func([IDL.Nat], [], []),
+    'activateTestMode' : IDL.Func([], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'calculatePlatformFees' : IDL.Func([], [IDL.Float64], ['query']),
     'completeTaskPayment' : IDL.Func([IDL.Nat, IDL.Float64], [], []),
@@ -415,6 +419,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(PushNotification)],
         ['query'],
       ),
+    'getAllUserIds' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getAndUpdateCurrentPrice' : IDL.Func(
         [],
         [IDL.Record({ 'currency' : IDL.Opt(IDL.Text), 'price' : IDL.Float64 })],
@@ -468,6 +473,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+    'isTestModeEnabled' : IDL.Func([], [IDL.Bool], ['query']),
     'markNotificationAsRead' : IDL.Func([IDL.Nat], [], []),
     'registerAiAgent' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'registerHumanWorker' : IDL.Func(
